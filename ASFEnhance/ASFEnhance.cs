@@ -91,22 +91,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
 
         Utils.Config = config ?? new();
 
-        //开发者特性
-        if (Config.DevFeature)
-        {
-            warnings.AppendLine(Static.Line);
-            warnings.AppendLine(Langs.DevFeatureEnabledWarning);
-            warnings.AppendLine(Static.Line);
-        }
-
-        //使用协议
-        if (!Config.EULA)
-        {
-            warnings.AppendLine(Static.Line);
-            warnings.AppendLineFormat(Langs.EulaWarning, Name);
-            warnings.AppendLine(Static.Line);
-        }
-
         if (warnings.Length > 1)
         {
             ASFLogger.LogGenericWarning(warnings.ToString());
@@ -122,28 +106,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
             Config.Addresses.Add(Config.Address);
             Config.Address = null;
         }
-
-        //统计
-        if (Config.Statistic)
-        {
-            var request = new Uri("https://asfe.chrxw.com/asfenhace");
-            if (_Adapter_.ExtensionCore.HasSubModule)
-            {
-                List<string>? names = ["asfenhance"];
-                foreach (var subModules in _Adapter_.ExtensionCore.SubModules.Keys)
-                {
-                    names.Add(subModules.ToLowerInvariant());
-                }
-                request = new Uri(request, string.Join('+', names));
-            }
-
-            StatisticTimer = new Timer(
-                async (_) => await ASF.WebBrowser!.UrlGetToHtmlDocument(request).ConfigureAwait(false),
-                null,
-                TimeSpan.FromSeconds(30),
-                TimeSpan.FromHours(24)
-            );
-        }
+        
 
         //禁用命令
         if (Config.DisabledCmds != null)
@@ -383,12 +346,12 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
 
                 //Curasor
                 "CURATORLIST" or
-                "CL" when Config.EULA && access >= EAccess.Master =>
+                "CL" when access >= EAccess.Master =>
                     Curator.Command.ResponseGetFollowingCurators(bot),
 
                 "UNFOLLOWALLCURASOR" or
                 "UNFOLLOWALLCURASORS" or
-                "UFACU" when Config.EULA && access >= EAccess.Master =>
+                "UFACU" when access >= EAccess.Master =>
                     Curator.Command.ResponseUnFollowAllCurators(bot),
 
                 //Explorer
@@ -406,7 +369,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
 
                 //Group
                 "GROUPLIST" or
-                "GL" when Config.EULA && access >= EAccess.FamilySharing =>
+                "GL"  when access >= EAccess.FamilySharing =>
                     Group.Command.ResponseGroupList(bot),
 
                 //Other
@@ -718,26 +681,26 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
 
                 //Curasor
                 "CURATORLIST" or
-                "CL" when Config.EULA && access >= EAccess.Master =>
+                "CL"  when access >= EAccess.Master =>
                     Curator.Command.ResponseGetFollowingCurators(Utilities.GetArgsAsText(args, 1, ",")),
 
                 "FOLLOWCURATOR" or
-                "FCU" when Config.EULA && argLength > 2 && access >= EAccess.Master =>
+                "FCU"  when argLength > 2 && access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(args[1], Utilities.GetArgsAsText(args, 2, ","), true),
                 "FOLLOWCURATOR" or
-                "FCU" when Config.EULA && access >= EAccess.Master =>
+                "FCU"  when access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(bot, args[1], true),
 
                 "UNFOLLOWALLCURASOR" or
                 "UNFOLLOWALLCURASORS" or
-                "UFACU" when Config.EULA && access >= EAccess.Master =>
+                "UFACU"  when access >= EAccess.Master =>
                     Curator.Command.ResponseUnFollowAllCurators(Utilities.GetArgsAsText(args, 1, ",")),
 
                 "UNFOLLOWCURATOR" or
-                "UFCU" when Config.EULA && argLength > 2 && access >= EAccess.Master =>
+                "UFCU"  when argLength > 2 && access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(args[1], Utilities.GetArgsAsText(args, 2, ","), false),
                 "UNFOLLOWCURATOR" or
-                "UFCU" when Config.EULA && access >= EAccess.Master =>
+                "UFCU"  when access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(bot, args[1], false),
 
                 //Explorer
@@ -780,21 +743,21 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
 
                 //Group
                 "GROUPLIST" or
-                "GL" when Config.EULA && access >= EAccess.FamilySharing =>
+                "GL"  when access >= EAccess.FamilySharing =>
                     Group.Command.ResponseGroupList(Utilities.GetArgsAsText(args, 1, ",")),
 
                 "JOINGROUP" or
-                "JG" when Config.EULA && argLength > 2 && access >= EAccess.Master =>
+                "JG"  when argLength > 2 && access >= EAccess.Master =>
                     Group.Command.ResponseJoinGroup(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "JOINGROUP" or
-                "JG" when Config.EULA && access >= EAccess.Master =>
+                "JG"  when access >= EAccess.Master =>
                     Group.Command.ResponseJoinGroup(bot, args[1]),
 
                 "LEAVEGROUP" or
-                "LG" when Config.EULA && argLength > 2 && access >= EAccess.Master =>
+                "LG"  when argLength > 2 && access >= EAccess.Master =>
                     Group.Command.ResponseLeaveGroup(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "LEAVEGROUP" or
-                "LG" when Config.EULA && access >= EAccess.Master =>
+                "LG"  when access >= EAccess.Master =>
                     Group.Command.ResponseLeaveGroup(bot, args[1]),
 
                 //Other
@@ -914,24 +877,24 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                     Store.Command.ResponseGetAppsDetail(bot, args[1]),
 
                 "RECOMMENT" or
-                "REC" when Config.EULA && argLength > 2 && access >= EAccess.Master =>
+                "REC"  when argLength > 2 && access >= EAccess.Master =>
                     Store.Command.ResponseGetReview(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "RECOMMENT" or
-                "REC" when Config.EULA && access >= EAccess.Master =>
+                "REC"  when access >= EAccess.Master =>
                     Store.Command.ResponseGetReview(bot, args[1]),
 
                 "DELETERECOMMENT" or
-                "DREC" when Config.EULA && argLength > 2 && access >= EAccess.Master =>
+                "DREC"  when argLength > 2 && access >= EAccess.Master =>
                     Store.Command.ResponseDeleteReview(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "DELETERECOMMENT" or
-                "DREC" when Config.EULA && access >= EAccess.Master =>
+                "DREC"  when access >= EAccess.Master =>
                     Store.Command.ResponseDeleteReview(bot, args[1]),
 
                 "PUBLISHRECOMMENT" or
-                "PREC" when Config.EULA && argLength > 3 && access >= EAccess.Master =>
+                "PREC"  when argLength > 3 && access >= EAccess.Master =>
                     Store.Command.ResponsePublishReview(args[1], args[2], Utilities.GetArgsAsText(message, 3)),
                 "PUBLISHRECOMMENT" or
-                "PREC" when Config.EULA && argLength == 3 && access >= EAccess.Master =>
+                "PREC"  when argLength == 3 && access >= EAccess.Master =>
                     Store.Command.ResponsePublishReview(bot, args[1], args[2]),
 
                 "REQUESTACCESS" or
@@ -1043,7 +1006,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "DELETERECOMMENT" or
                 "DREC" or
                 "PUBLISHRECOMMEND" or
-                "PREC" when !Config.EULA && argLength >= 1 && access >= EAccess.Master =>
+                "PREC" when argLength >= 1 && access >= EAccess.Master =>
                     Task.FromResult(Other.Command.ResponseEulaCmdUnavilable()),
 
                 "COOKIES" or

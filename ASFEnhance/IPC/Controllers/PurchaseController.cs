@@ -42,11 +42,6 @@ public sealed class PurchaseController : ASFEController
 
         ArgumentNullException.ThrowIfNull(request);
 
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
-
         var bots = Bot.GetBots(botNames);
         if (bots == null || bots.Count == 0)
         {
@@ -163,11 +158,6 @@ public sealed class PurchaseController : ASFEController
             throw new ArgumentNullException(nameof(botNames));
         }
 
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
-
         var bots = Bot.GetBots(botNames);
 
         if (bots == null || bots.Count == 0)
@@ -207,11 +197,6 @@ public sealed class PurchaseController : ASFEController
         if (string.IsNullOrEmpty(botNames))
         {
             throw new ArgumentNullException(nameof(botNames));
-        }
-
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
         }
 
         var bots = Bot.GetBots(botNames);
@@ -327,11 +312,6 @@ public sealed class PurchaseController : ASFEController
 
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(request.Items);
-
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
 
         var bots = Bot.GetBots(botNames);
         if (bots == null || bots.Count == 0)
@@ -492,11 +472,6 @@ public sealed class PurchaseController : ASFEController
         }
 
         ArgumentNullException.ThrowIfNull(request);
-
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
 
         var bots = Bot.GetBots(botNames);
         if (bots == null || bots.Count == 0)

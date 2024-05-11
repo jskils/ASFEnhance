@@ -37,11 +37,6 @@ public sealed class CuratorController : ASFEController
         }
         ArgumentNullException.ThrowIfNull(request);
 
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
-
         HashSet<Bot>? bots = Bot.GetBots(botNames);
 
         if (bots == null || bots.Count == 0)
@@ -96,11 +91,6 @@ public sealed class CuratorController : ASFEController
 
         ArgumentNullException.ThrowIfNull(request);
 
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
-
         HashSet<Bot>? bots = Bot.GetBots(botNames);
 
         if (bots == null || bots.Count == 0)
@@ -154,11 +144,6 @@ public sealed class CuratorController : ASFEController
         }
 
         ArgumentNullException.ThrowIfNull(request);
-
-        if (!Config.EULA)
-        {
-            return BadRequest(new GenericResponse(false, Langs.EulaFeatureUnavilable));
-        }
 
         HashSet<Bot>? bots = Bot.GetBots(botNames);
 
