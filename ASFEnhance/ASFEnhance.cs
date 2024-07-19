@@ -56,10 +56,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
             message.AppendLine(Langs.SubModuleNoModule);
         }
         message.AppendLine(Static.Line);
-        message.AppendLine(Langs.SubModulePluginVersion);
-        message.AppendLine(Langs.SubModulePluginUpdate);
-        message.AppendLine(Langs.SubModuleCmdTips);
-        message.AppendLine(Static.Line);
 
         ASFLogger.LogGenericInfo(message.ToString());
 
@@ -73,7 +69,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 {
                     try
                     {
-                        config = configValue.Deserialize<PluginConfig>();
+                        config = JsonSerializer.Deserialize<PluginConfig>(configValue);
                         if (config != null)
                         {
                             break;
@@ -151,19 +147,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
     /// <returns></returns>
     public Task OnLoaded()
     {
-        foreach (var backupPath in Directory.GetFiles(MyDirectory, "*.autobak"))
-        {
-            try
-            {
-                File.Delete(backupPath);
-                ASFLogger.LogGenericInfo(string.Format(Langs.SubModuleDeleteOldPluginSuccess, backupPath));
-            }
-            catch (Exception)
-            {
-                ASFLogger.LogGenericWarning(string.Format(Langs.SubModuleDeleteOldPluginFailed, backupPath));
-            }
-        }
-
         return Task.CompletedTask;
     }
 
@@ -172,7 +155,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
     /// </summary>
     private static string? PluginInfo => string.Format("{0} {1}", nameof(ASFEnhance), MyVersion);
 
-    public string RepositoryName => throw new NotImplementedException();
 
     /// <summary>
     /// 处理命令
@@ -200,12 +182,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                     Task.FromResult(PluginInfo),
 
                 //Update
-                "ASFEUPDATE" or
-                "AU" or
-                "ASFEVERSION" or
-                "AV" when access >= EAccess.Operator =>
-                    Task.FromResult(Update.Command.ResponseOldCmdTips()),
-
                 "PLUGINSLIST" or
                 "PLUGINLIST" or
                 "PL" when access >= EAccess.Operator =>
@@ -219,20 +195,11 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "PLUGINSUPDATE" or
                 "PLUGINUPDATE" or
                 "PU" when access >= EAccess.Master =>
-                    Update.Command.ResponsePluginUpdate(null),
+                    Update.Command.ResponsePluginUpdate(bot, access, null),
 
                 //Event
-                "SIM4" when access >= EAccess.Operator =>
-                    Event.Command.ResponseSim4(bot),
-
                 "DL2" when access >= EAccess.Operator =>
-                    Event.Command.ResponseDL2(bot),
-
-                "DL22" when access >= EAccess.Operator =>
-                    Event.Command.ResponseDL22(bot, null),
-
-                "RLE" when access >= EAccess.Operator =>
-                    Event.Command.ResponseRle(bot, null),
+                    Event.Command.ResponseDL2(bot, null),
 
                 "CLAIMITEM" or
                 "CI" when access >= EAccess.Operator =>
@@ -242,9 +209,9 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "C20" when access >= EAccess.Operator =>
                     Event.Command.ResponseClaim20Th(bot),
 
-                "CV" or
-                "CHECKVOTE" when access >= EAccess.Operator =>
-                    Event.Command.ResponseCheckWinterSteamAwardVote(bot),
+                //"CV" or
+                //"CHECKVOTE" when access >= EAccess.Operator =>
+                //    Event.Command.ResponseCheckWinterSteamAwardVote(bot),
 
                 //Shortcut
                 "P" =>
@@ -314,6 +281,16 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "GPA" when access >= EAccess.Operator =>
                     Account.Command.ResponseGetPrivacyAppList(bot),
 
+                "CHECKMARKETLIMIT" or
+                "CML" when access >= EAccess.Operator =>
+                    Account.Command.ResponseCheckMarketLimit(bot),
+
+                "PHONESUFFIX" when access >= EAccess.Operator =>
+                    Account.Command.ResponseGetPhoneSuffix(bot),
+
+                "REGISTEDATE" when access >= EAccess.Operator =>
+                    Account.Command.ResponseGetRegisteDate(bot),
+
                 //Cart
                 "CART" or
                 "C" when access >= EAccess.Operator =>
@@ -344,7 +321,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "CN" when access >= EAccess.Operator =>
                     Community.Command.ResponseClearNotification(bot),
 
-                //Curasor
+                //Curator
                 "CURATORLIST" or
                 "CL" when access >= EAccess.Master =>
                     Curator.Command.ResponseGetFollowingCurators(bot),
@@ -358,6 +335,10 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "EXPLORER" or
                 "EX" when access >= EAccess.Master =>
                     Task.FromResult(Explorer.Command.ResponseExploreDiscoveryQueue(bot)),
+
+                "ENABLEAUTOSTEAMSALEEVENT" or
+                "EASSE" when access >= EAccess.Master =>
+                    Explorer.Command.ResponseEnableAutoSteamSaleEvent(bot),
 
                 //Friend
                 "DELETEALLFRIEND" when access >= EAccess.Master =>
@@ -455,24 +436,13 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "PLUGINSUPDATE" or
                 "PLUGINUPDATE" or
                 "PU" when access >= EAccess.Master =>
-                    Update.Command.ResponsePluginUpdate(Utilities.GetArgsAsText(args, 1, ",")),
+                    Update.Command.ResponsePluginUpdate(bot, access, Utilities.GetArgsAsText(args, 1, ",")),
 
                 //Event
-                "SIM4" when access >= EAccess.Operator =>
-                    Event.Command.ResponseSim4(Utilities.GetArgsAsText(args, 1, ",")),
-
+                "DL2" when argLength > 2 && access >= EAccess.Operator =>
+                    Event.Command.ResponseDL2(SkipBotNames(args, 1, 1), args.Last()),
                 "DL2" when access >= EAccess.Operator =>
-                    Event.Command.ResponseDL2(Utilities.GetArgsAsText(args, 1, ",")),
-
-                "DL22" when argLength > 2 && access >= EAccess.Operator =>
-                    Event.Command.ResponseDL22(SkipBotNames(args, 1, 1), args.Last()),
-                "DL22" when access >= EAccess.Operator =>
-                    Event.Command.ResponseDL22(args[1], null),
-
-                "RLE" when argLength > 2 && access >= EAccess.Operator =>
-                    Event.Command.ResponseRle(SkipBotNames(args, 1, 1), args.Last()),
-                "RLE" when access >= EAccess.Operator =>
-                    Event.Command.ResponseRle(args[1], null),
+                    Event.Command.ResponseDL2(args[1], null),
 
                 "CLAIMITEM" or
                 "CI" when access >= EAccess.Operator =>
@@ -482,9 +452,9 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "C20" when access >= EAccess.Operator =>
                     Event.Command.ResponseClaim20Th(Utilities.GetArgsAsText(args, 1, ",")),
 
-                "CV" or
-                "CHECKVOTE" when access >= EAccess.Operator =>
-                    Event.Command.ResponseCheckWinterSteamAwardVote(Utilities.GetArgsAsText(args, 1, ",")),
+                //"CV" or
+                //"CHECKVOTE" when access >= EAccess.Operator =>
+                //    Event.Command.ResponseCheckWinterSteamAwardVote(Utilities.GetArgsAsText(args, 1, ",")),
 
                 //Shortcut
                 "AL" =>
@@ -600,6 +570,16 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "SAPUB" when access >= EAccess.Master =>
                     Account.Command.ResponseSetAppListPrivacy(bot, args[1], false),
 
+                "CHECKMARKETLIMIT" or
+                "CML" when access >= EAccess.Operator =>
+                    Account.Command.ResponseCheckMarketLimit(Utilities.GetArgsAsText(args, 1, ",")),
+
+                "PHONESUFFIX" when access >= EAccess.Operator =>
+                    Account.Command.ResponseGetPhoneSuffix(Utilities.GetArgsAsText(args, 1, ",")),
+
+                "REGISTEDATE" when access >= EAccess.Operator =>
+                    Account.Command.ResponseGetRegisteDate(Utilities.GetArgsAsText(args, 1, ",")),
+
                 //Cart
                 "CART" or
                 "C" when access >= EAccess.Operator =>
@@ -632,6 +612,13 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "EDITCART" or
                 "EC" when argLength == 2 && access >= EAccess.Operator =>
                     Cart.Command.ResponseEditCartGame(bot, args[1], false, null),
+
+                "DELETECART" or
+                "DC" when argLength > 2 && access >= EAccess.Operator =>
+                    Cart.Command.ResponseRemoveCartGame(args[1], Utilities.GetArgsAsText(args, 1, ",")),
+                "DELETECART" or
+                "DC" when argLength == 2 && access >= EAccess.Operator =>
+                    Cart.Command.ResponseRemoveCartGame(bot, args[1]),
 
                 "EDITCARTPRIVATE" or
                 "ECP" when argLength > 2 && access >= EAccess.Operator =>
@@ -708,7 +695,11 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "EX" when access >= EAccess.Master =>
                     Explorer.Command.ResponseExploreDiscoveryQueue(Utilities.GetArgsAsText(args, 1, ",")),
 
-                //Friend            
+                "ENABLEAUTOSTEAMSALEEVENT" or
+                "EASSE" when access >= EAccess.Master =>
+                    Explorer.Command.ResponseEnableAutoSteamSaleEvent(Utilities.GetArgsAsText(args, 1, ",")),
+
+                //Friend
                 "ADDBOTFRIEND" or
                 "ABF" when argLength > 2 && access >= EAccess.Master =>
                     Friend.Command.ResponseAddBotFriend(args[1], Utilities.GetArgsAsText(args, 2, ",")),
@@ -780,6 +771,15 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "CRAFTBADGES" or
                 "CB" when access >= EAccess.Master =>
                     Profile.Command.ResponseCraftBadge(Utilities.GetArgsAsText(args, 1, ",")),
+
+                "CRAFTSPECIFYBADGE" or
+                "CRAFTSPECIFYBADGES" or
+                "CSB" when access >= EAccess.Master && argLength > 2 =>
+                    Profile.Command.ResponseCraftSpecifyBadge(args[1], Utilities.GetArgsAsText(args, 2, ",")),
+                "CRAFTSPECIFYBADGE" or
+                "CRAFTSPECIFYBADGES" or
+                "CSB" when access >= EAccess.Master =>
+                    Profile.Command.ResponseCraftSpecifyBadge(bot, args[1]),
 
                 "DELETEAVATAR" when access >= EAccess.Master =>
                     Profile.Command.ResponseDelProfileAvatar(Utilities.GetArgsAsText(args, 1, ",")),
@@ -951,10 +951,17 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 //WishList
                 "ADDWISHLIST" or
                 "AW" when argLength > 2 && access >= EAccess.Master =>
-                    Wishlist.Command.ResponseAddWishlist(args[1], Utilities.GetArgsAsText(args, 2, ",")),
+                    Wishlist.Command.ResponseAddWishlist(args[1], Utilities.GetArgsAsText(args, 2, ","), true),
                 "ADDWISHLIST" or
                 "AW" when access >= EAccess.Master =>
-                    Wishlist.Command.ResponseAddWishlist(bot, args[1]),
+                    Wishlist.Command.ResponseAddWishlist(bot, args[1], true),
+
+                "REMOVEWISHLIST" or
+                "RW" when argLength > 2 && access >= EAccess.Master =>
+                    Wishlist.Command.ResponseAddWishlist(args[1], Utilities.GetArgsAsText(args, 2, ","), false),
+                "REMOVEWISHLIST" or
+                "RW" when access >= EAccess.Master =>
+                    Wishlist.Command.ResponseAddWishlist(bot, args[1], false),
 
                 "CHECK" or
                 "CK" when argLength > 2 && access >= EAccess.Master =>
@@ -970,19 +977,45 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
                 "FG" when access >= EAccess.Master =>
                     Wishlist.Command.ResponseFollowGame(bot, args[1], true),
 
-                "REMOVEWISHLIST" or
-                "RW" when argLength > 2 && access >= EAccess.Master =>
-                    Wishlist.Command.ResponseRemoveWishlist(args[1], Utilities.GetArgsAsText(args, 2, ",")),
-                "REMOVEWISHLIST" or
-                "RW" when access >= EAccess.Master =>
-                    Wishlist.Command.ResponseRemoveWishlist(bot, args[1]),
-
                 "UNFOLLOWGAME" or
                 "UFG" when argLength > 2 && access >= EAccess.Master =>
                     Wishlist.Command.ResponseFollowGame(args[1], Utilities.GetArgsAsText(args, 2, ","), false),
                 "UNFOLLOWGAME" or
                 "UFG" when access >= EAccess.Master =>
                     Wishlist.Command.ResponseFollowGame(bot, args[1], false),
+
+                "IGNOREGAME" or
+                "IG" when argLength > 2 && access >= EAccess.Master =>
+                    Wishlist.Command.ResponseIgnoreGame(args[1], Utilities.GetArgsAsText(args, 2, ","), true),
+                "IGNOREGAME" or
+                "IG" when access >= EAccess.Master =>
+                    Wishlist.Command.ResponseIgnoreGame(bot, args[1], true),
+
+                "REMOVEIGNOREGAME" or
+                "RIG" when argLength > 2 && access >= EAccess.Master =>
+                    Wishlist.Command.ResponseIgnoreGame(args[1], Utilities.GetArgsAsText(args, 2, ","), false),
+                "REMOVEIGNOREGAME" or
+                "RIG" when access >= EAccess.Master =>
+                    Wishlist.Command.ResponseIgnoreGame(bot, args[1], false),
+
+                //Inventory
+                "STACKINVENTORY" or
+                "STACKINV" or
+                "STI" when argLength > 3 && access >= EAccess.Operator =>
+                    Inventory.Command.ResponseStackInventory(SkipBotNames(args, 1, 2), args[argLength - 2], args.Last()),
+                "STACKINVENTORY" or
+                "STACKINV" or
+                "STI" when argLength == 3 && access >= EAccess.Operator =>
+                    Inventory.Command.ResponseStackInventory(bot, args[1], args[2]),
+
+                "UNSTACKINVENTORY" or
+                "UNSTACKINV" or
+                "USTI" when argLength > 3 && access >= EAccess.Operator =>
+                    Inventory.Command.ResponseUnStackInventory(SkipBotNames(args, 1, 2), args[argLength - 2], args.Last()),
+                "UNSTACKINVENTORY" or
+                "UNSTACKINV" or
+                "USTI" when argLength == 3 && access >= EAccess.Operator =>
+                    Inventory.Command.ResponseUnStackInventory(bot, args[1], args[2]),
 
                 //DevFuture
                 "COOKIES" when Config.DevFeature && access >= EAccess.Owner =>
@@ -1093,8 +1126,8 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
         catch (MissingMethodException ex)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(FormatStaticResponse("Missing Method Exception Detected, Use ASF-generic version may help"));
-            sb.AppendLine(FormatStaticResponse("检测到 Missing Method Exception 错误, 换成 ASF-generic 版本可能可以修正"));
+            sb.AppendLine("Missing Method Exception Detected, Use ASF-generic version may help");
+            sb.AppendLine("检测到 Missing Method Exception 错误, 换成 ASF-generic 版本可能可以修正");
             sb.AppendLine(Static.Line);
             sb.AppendLine(ex.StackTrace);
             return FormatStaticResponse(sb.ToString());
@@ -1151,26 +1184,19 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IPlugi
         return Task.FromResult(false);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="asfVersion"></param>
-    /// <param name="asfVariant"></param>
-    /// <param name="asfUpdate"></param>
-    /// <param name="updateChannel"></param>
-    /// <param name="forced"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public async Task<Uri?> GetTargetReleaseURL(Version asfVersion, string asfVariant, bool asfUpdate, GlobalConfig.EUpdateChannel updateChannel, bool forced)
+    /// <inheritdoc/>
+    public Task<ReleaseAsset?> GetTargetReleaseAsset(Version asfVersion, string asfVariant, Version newPluginVersion, IReadOnlyCollection<ReleaseAsset> releaseAssets)
     {
-        var response = await Update.WebRequest.GetLatestRelease("chr233/ASFEnhance").ConfigureAwait(false);
-        if (response == null)
+        var result = releaseAssets.Count switch
         {
-            return null;
-        }
+            0 => null,
+            1 => //如果找到一个文件，则第一个
+                releaseAssets.First(),
+            _ => //优先下载当前语言的版本
+                releaseAssets.FirstOrDefault(static x => x.Name.Contains(Langs.CurrentLanguage)) ??
+                releaseAssets.FirstOrDefault(static x => x.Name.Contains("en-US"))
+        };
 
-        var releaseUrl = Update.WebRequest.FetchDownloadUrl(response);
-
-        return !string.IsNullOrEmpty(releaseUrl) ? new Uri(releaseUrl) : null;
+        return Task.FromResult(result);
     }
 }

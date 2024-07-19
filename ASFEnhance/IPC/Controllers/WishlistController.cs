@@ -57,7 +57,7 @@ public sealed class WishlistController : ASFEController
                 {
                     if (!bot.IsConnectedAndLoggedOn) { return (bot.BotName, false); }
 
-                    var result = await Wishlist.WebRequest.AddWishlist(bot, appid).ConfigureAwait(false);
+                    var result = await Wishlist.WebRequest.AddWishlist(bot, appid, true).ConfigureAwait(false);
                     return (bot.BotName, result?.Result == true);
                 }
             )).ConfigureAwait(false);
@@ -112,7 +112,7 @@ public sealed class WishlistController : ASFEController
                 {
                     if (!bot.IsConnectedAndLoggedOn) { return (bot.BotName, false); }
 
-                    var result = await Wishlist.WebRequest.RemoveWishlist(bot, appid).ConfigureAwait(false);
+                    var result = await Wishlist.WebRequest.AddWishlist(bot, appid, false).ConfigureAwait(false);
                     return (bot.BotName, result?.Result == true);
                 }
             )).ConfigureAwait(false);

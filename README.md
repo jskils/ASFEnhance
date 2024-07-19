@@ -35,14 +35,11 @@ ASFEnhance 介绍 & 使用指南: [https://keylol.com/t804841-1-1](https://keylo
 
 > 本组命令具有时效性, 仅能在特定时间内使用, 失效的命令将会在插件的下一个版本中被移除
 
-| 命令                       | 缩写  |    权限    | 说明                                                                                                                                                                  |
-| -------------------------- | :---: | :--------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CLAIMITEM [Bots]`         | `CI`  | `Operator` | 获取促销活动的奖励物品(比如贴纸)                                                                                                                                      |
-| `CLAIM20TH [Bots]`         | `C20` | `Operator` | 领取点数商店中 20 周年免费物品                                                                                                                                        |
-| `SIM4 [Bots]`              |       | `Operator` | 获取 `The Sims™ 4` 贴纸 [url](https://store.steampowered.com/sale/simscelebrationsale)                                                                                |
-| `DL2 [Bots]`               |       | `Operator` | 获取 `Dying Light 2 Stay Human` 个人资料装饰品 [url](https://store.steampowered.com/sale/dyinglight)                                                                  |
-| `DL22 [Bots] [Sticker Id]` |       | `Operator` | 获取 `Dying Light 2 Stay Human` 个人资料头像, `Sticker Id` 参数可选, 有效值为 1 到 8 [url](https://store.steampowered.com/developer/Techland/sale/techlandsummer2023) |
-| `RLE [Bots] [Sticker Id]`  |       | `Operator` | 获取 `Redfall Launch Event` 贴纸, `Sticker Id` 参数可选, 有效值为 1 到 4 [url](https://store.steampowered.com/sale/redfall_launch)                                    |
+| 命令               | 缩写  |    权限    | 说明                                                                                                           |
+| ------------------ | :---: | :--------: | -------------------------------------------------------------------------------------------------------------- |
+| `CLAIMITEM [Bots]` | `CI`  | `Operator` | 获取促销活动的奖励物品(比如贴纸)                                                                               |
+| `CLAIM20TH [Bots]` | `C20` | `Operator` | 领取点数商店中 20 周年免费物品                                                                                 |
+| `DL2 [Bots]`       |       | `Operator` | 获取 `Dying Light 2 Stay Human` 个人资料装饰品 [url](https://store.steampowered.com/sale/dyinglight2towerraid) |
 
 > `ASFEnhance` 将会在启动 1 小时后的每 23 小时, 为 `AutoClaimItemBotNames` 中设置的机器人, 执行 `CLAIMITEM` 命令
 
@@ -60,15 +57,32 @@ ASFEnhance 介绍 & 使用指南: [https://keylol.com/t804841-1-1](https://keylo
 
 受支持的插件列表:
 
-- [ASFBuffBot](https://github.com/chr233/ASFBuffBot) (Bugfix WIP)
+- [ASFBuffBot](https://github.com/chr233/ASFBuffBot)
 - [ASFOAuth](https://github.com/chr233/ASFOAuth)
-- [ASFTradeExtension](https://github.com/chr233/ASFTradeExtension) (Bugfix WIP)
+- [ASFTradeExtension](https://github.com/chr233/ASFTradeExtension)
 - [ASFAchievementManagerEx](https://github.com/chr233/ASFAchievementManagerEx) (Bugfix WIP)
+- [ASFAwardTool](https://afdian.com/item/8caab3b0105411ef83c75254001e7c00)
 - ...
 
 > 接入示例插件: [ASFEnhanceAdapterDemoPlugin](https://github.com/chr233/ASFEnhanceAdapterDemoPlugin)
 
 ### 插件更新 & 子模块更新
+
+> ArchiSteamFarm 6.0.0.0 后新增插件更新接口, 可以通过 ASF 更新插件
+
+更新插件命令: `UPDATEPLUGINS stable ASFEnhance`
+
+---
+
+> 也可以使用 `Update` 命令更新, 需要将 `ASF.json` 中的 `PluginsUpdateMode` 设置为 `blacklist`
+
+![blacklist](img/blacklist.png)
+
+> 或者 `PluginsUpdateMode` 设置为 `whitelist`, 并将 `ASFEnhance` 添加到 `PluginsUpdateList` 中
+
+![whitelist](img/whitelist.png)
+
+---
 
 | 命令                      | 缩写 | 权限       | 说明                                                                 |
 | ------------------------- | ---- | ---------- | -------------------------------------------------------------------- |
@@ -87,7 +101,7 @@ ASFEnhance 介绍 & 使用指南: [https://keylol.com/t804841-1-1](https://keylo
 
 [afdian_qr]: https://raw.chrxw.com/chr233/master/afadian_qr.png
 [afdian_img]: https://img.shields.io/badge/爱发电-@chr__-ea4aaa.svg?logo=github-sponsors
-[afdian_link]: https://afdian.net/@chr233
+[afdian_link]: https://afdian.com/@chr233
 [bmac_qr]: https://raw.chrxw.com/chr233/master/bmc_qr.png
 [bmac_img]: https://img.shields.io/badge/buy%20me%20a%20coffee-@chr233-yellow?logo=buymeacoffee
 [bmac_link]: https://www.buymeacoffee.com/chr233
@@ -96,19 +110,26 @@ ASFEnhance 介绍 & 使用指南: [https://keylol.com/t804841-1-1](https://keylo
 
 ### 更新日志
 
-| ASFEnhance 版本                                                        | 适配 ASF 版本 | 更新说明                                                                 |
-| ---------------------------------------------------------------------- | :-----------: | ------------------------------------------------------------------------ |
-| [2.1.4.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.4.0)   |    6.0.2.6    | ASF -> 6.0.2.6, 修复 `ADDWISHLIST` 命令                                  |
-| [2.1.3.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.3.3)   |   6.0.1.24    | ASF -> 6.0.1.24, 修复 `ADDWISHLIST` 命令, 新增 `GETPRIVACYAPP` 等命令    |
-| [2.1.2.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.2.3)   |    6.0.0.3    | 修复 `PURCHASE` 命令, 新增 `RECOMMENT` 命令                              |
-| [2.1.1.1](https://github.com/chr233/ASFEnhance/releases/tag/2.1.1.1)   |    6.0.0.3    | ASF -> 6.0.0.3                                                           |
-| [2.0.16.2](https://github.com/chr233/ASFEnhance/releases/tag/2.0.16.2) |    5.5.3.4    | 新增 `EDITCART` `ADDCARTGIFT` 命令, 改进 `APPDETAIL` 命令, 改进 IPC 接口 |
+| ASFEnhance 版本                                                        | 适配 ASF 版本 | 更新说明                                                 |
+| ---------------------------------------------------------------------- | :-----------: | -------------------------------------------------------- |
+| [2.1.12.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.12.0) |    6.0.4.4    | 改进翻译, 新增 `IGNOREGAME` 命令                         |
+| [2.1.11.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.11.0) |    6.0.4.4    | 改进翻译, 新增 `REGISTEDATE` 命令                        |
+| [2.1.10.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.10.3) |    6.0.4.4    | ASF -> 6.0.4.4, 改进翻译, 新增 `CRAFTSPECIFYBADGES` 命令 |
+| [2.1.9.2](https://github.com/chr233/ASFEnhance/releases/tag/2.1.9.2)   |    6.0.3.4    | 新增 `DL2` 命令, 移除失效命令                            |
+| [2.1.8.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.8.3)   |    6.0.3.4    | 新增 `STACKINVENTORY`, `UNSTACKINVENTORY` 命令           |
+| [2.1.7.1](https://github.com/chr233/ASFEnhance/releases/tag/2.1.7.1)   |    6.0.3.4    | 新增 `CHECKMARKLIMIT` 命令                               |
+| [2.1.6.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.6.0)   |    6.0.3.4    | ASF -> 6.0.3.4                                           |
 
 <details>
   <summary>历史版本</summary>
 
 | ASFEnhance 版本                                                        | 依赖 ASF 版本 | 更新说明                                                                     |
 | ---------------------------------------------------------------------- | :-----------: | ---------------------------------------------------------------------------- |
+| [2.1.5.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.5.0)   |    6.0.2.6    | 修复 `GETACCCOUNTBAN` 命令, 新增 `DELETECART` 命令                           |
+| [2.1.4.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.4.0)   |    6.0.2.6    | ASF -> 6.0.2.6, 修复 `ADDWISHLIST` 命令                                      |
+| [2.1.3.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.3.3)   |   6.0.1.24    | ASF -> 6.0.1.24, 修复 `ADDWISHLIST` 命令, 新增 `GETPRIVACYAPP` 等命令        |
+| [2.1.2.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.2.3)   |    6.0.0.3    | 修复 `PURCHASE` 命令, 新增 `RECOMMENT` 命令                                  |
+| [2.1.1.1](https://github.com/chr233/ASFEnhance/releases/tag/2.1.1.1)   |    6.0.0.3    | ASF -> 6.0.0.3                                                               |
 | [2.0.16.2](https://github.com/chr233/ASFEnhance/releases/tag/2.0.16.2) |    5.5.3.4    | 新增 `EDITCART` `ADDCARTGIFT` 命令, 改进 `APPDETAIL` 命令, 改进 IPC 接口     |
 | [2.0.15.0](https://github.com/chr233/ASFEnhance/releases/tag/2.0.15.0) |    5.5.3.4    | 适配新的购物车接口, 移除 `PURCHASEGIFT` 命令                                 |
 | [2.0.14.2](https://github.com/chr233/ASFEnhance/releases/tag/2.0.14.2) |    5.5.3.4    | ASF -> 5.5.3.4                                                               |
@@ -316,6 +337,8 @@ ASF.json
 | `GETPRIVACYAPP [Bots]`                    | `GPA`   | `Operator` | 获取私密 APP 列表                                                                               |
 | `SETAPPPRIVATE [Bots] <AppIds>`           | `SAPRI` | `Master`   | 将指定 APP 设置为私密                                                                           |
 | `SETAPPPUBLIC [Bots] <AppIds>`            | `SAPUB` | `Master`   | 将指定 APP 设置为公开                                                                           |
+| `CHECKMARKETLIMIT [Bots]`                 | `CML`   | `Operator` | 检查机器人的市场交易权限是否被限制                                                              |
+| `REGISTEDATE [Bots]`                      |         | `Operator` | 获取机器人注册时间                                                                              |
 
 - `SETEMAILOPTIONS` 参数说明
 
@@ -395,6 +418,7 @@ ASF.json
 | `SETAVATAR [Bots] ImageUrl` 🐞\*       | `GA`  | `Master`        | 设置机器人的头像为指定网络图片                                                                        |
 | `DELETEAVATAR [Bots]` 🐞\*             |       | `Master`        | 删除机器人的头像(设置为默认头像)                                                                      |
 | `CRAFTBADGE [Bots]`                    | `CB`  | `Master`        | 自动合成可合成徽章 (每个可升级徽章合成一级)                                                           |
+| `CRAFTSPECIFYBADGES [Bots] <AppIds>`   | `CSB` | `Master`        | 自动合成指定游戏的徽章 (各合成一级)                                                                   |
 | `EDITCUSTOMURL [Bot] CustomUrl`        | `ECU` | `Master`        | 修改自定义个人资料链接                                                                                |
 | `DELETECUSTOMURL [Bots]`               | `DCU` | `Master`        | 删除自定义个人资料链接                                                                                |
 
@@ -433,13 +457,15 @@ ASF.json
 
 ### 愿望单相关
 
-| 命令                             | 缩写  | 权限     | 说明                    |
-| -------------------------------- | ----- | -------- | ----------------------- |
-| `ADDWISHLIST [Bots] <AppIDs>`    | `AW`  | `Master` | 添加愿望单              |
-| `REMOVEWISHLIST [Bots] <AppIDs>` | `RW`  | `Master` | 移除愿望单              |
-| `FOLLOWGAME [Bots] <AppIDs>`     | `FG`  | `Master` | 关注游戏                |
-| `UNFOLLOWGAME [Bots] <AppIDs>`   | `UFG` | `Master` | 取消关注游戏            |
-| `CHECK [Bots] <AppIDs>`          | `CK`  | `Master` | 检查游戏关注/愿望单情况 |
+| 命令                               | 缩写  | 权限     | 说明                    |
+| ---------------------------------- | ----- | -------- | ----------------------- |
+| `ADDWISHLIST [Bots] <AppIDs>`      | `AW`  | `Master` | 添加愿望单              |
+| `REMOVEWISHLIST [Bots] <AppIDs>`   | `RW`  | `Master` | 移除愿望单              |
+| `FOLLOWGAME [Bots] <AppIDs>`       | `FG`  | `Master` | 关注游戏                |
+| `UNFOLLOWGAME [Bots] <AppIDs>`     | `UFG` | `Master` | 取消关注游戏            |
+| `CHECK [Bots] <AppIDs>`            | `CK`  | `Master` | 检查游戏关注/愿望单情况 |
+| `IGNOREGAME [Bots] <AppIDs>`       | `IG`  | `Master` | 忽略游戏                |
+| `REMOVEIGNOREGAME [Bots] <AppIDs>` | `RIG` | `Master` | 取消忽略游戏            |
 
 ### 商店相关
 
@@ -473,6 +499,7 @@ ASF.json
 | `EDITCART [Bots] <lineItemIds>`                  | `EC`  | `Operator` | 编辑购物车项目, 设置为为自己购买                                                      |
 | `EDITCARTPRIVATE [Bots] <lineItemIds>`           | `ECP` | `Operator` | 编辑购物车项目, 设置为私密购买                                                        |
 | `EDITCARTGIFT [Bots] <lineItemIds> SteamId`      | `ECG` | `Operator` | 编辑购物车项目, 设置为礼物赠送, SteamId 支持 botName 或者 SteamID32 或者 SteamId64    |
+| `DELETECART [Bots] <lineItemIds>`                | `DC`  | `Operator` | 删除购物车项目                                                                        |
 | `CARTRESET [Bots]`                               | `CR`  | `Operator` | 清空购物车                                                                            |
 | `CARTCOUNTRY [Bots]`                             | `CC`  | `Operator` | 获取购物车可用结算区域(跟账号钱包和当前 IP 所在地有关)                                |
 | `FAKEPURCHASE [Bots]`                            | `FPC` | `Master`   | 模拟结算机器人的购物车, 生成一条购买失败的记录, 不会真的结账                          |
@@ -506,11 +533,16 @@ ASF.json
 
 ### 探索队列
 
-| 命令              | 缩写 | 权限     | 说明                        |
-| ----------------- | ---- | -------- | --------------------------- |
-| `EXPLORER [Bots]` | `EX` | `Master` | 5 秒后触发 ASF 探索队列任务 |
+| 命令                              | 缩写    | 权限     | 说明                                       |
+| --------------------------------- | ------- | -------- | ------------------------------------------ |
+| `EXPLORER [Bots]`                 | `EX`    | `Master` | 5 秒后触发 ASF 探索队列任务                |
+| `ENABLEAUTOSTEAMSALEEVENT [Bots]` | `EASSE` | `Master` | 为指定机器人开启 `AutoSteamSaleEvent` 设置 |
 
-> 请尽量让 ASF 自己来探索队列, 本命令仅作为强制触发探索队列的一种补充方式
+> `AutoSteamSaleEvent` 是 ArchiSteamFarm 的功能, [参见](https://github.com/JustArchiNET/ArchiSteamFarm/wiki/Configuration-zh-CN#farmingpreferences)
+>
+> 请尽量让 ASF 自己来探索队列, 本命令仅作为强制触发 `AutoSteamSaleEvent` 的一种补充方式
+>
+> `ENABLEAUTOSTEAMSALEEVENT` 实际上只是将机器人配置中的 `FarmingPreferences` 改为对应的值来启用 `AutoSteamSaleEvent`, 也可以手动修改机器人配置来达到相同的效果
 
 ### 钱包相关
 
@@ -518,6 +550,15 @@ ASF.json
 | -------------------------------- | ------ | -------- | -------------------------------------------------------------- |
 | `REDEEMWALLET [Bots] <keys>`     | `RWA`  | `Master` | 兑换钱包充值码, 如果需要提供地址信息则自动填入配置文件中的地址 |
 | `REDEEMWALLETMULT [Bots] <keys>` | `RWAM` | `Master` | 批量兑换钱包充值码, 但是每个机器人只会兑换一个 `key`           |
+
+## 物品库存
+
+> 物品堆叠和取消堆叠会发送大量请求, 请不要对大量机器人同时使用这些命令, 有可能会因为网络请求过多导致临时封禁
+
+| 命令                                      | 缩写   | 权限       | 说明                                                                                |
+| ----------------------------------------- | ------ | ---------- | ----------------------------------------------------------------------------------- |
+| `STACKINVENTORY [Bots] AppId ContextId`   | `STI`  | `Operator` | 将指定 AppId 的物品库存中同类物品堆叠在一起, 对于大部分 App 来说, `ContextId` = 2   |
+| `UNSTACKINVENTORY [Bots] AppId ContextId` | `USTI` | `Operator` | 将指定 AppId 的物品库存中堆叠后的物品解除堆叠, 对于大部分 App 来说, `ContextId` = 2 |
 
 ### ASF 命令缩写
 

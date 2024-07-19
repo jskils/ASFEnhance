@@ -33,14 +33,11 @@
 
 > Эта группа команд доступна только в течение ограниченного времени и будет удалена при выходе следующей версии плагина, если она потеряет свою актуальность
 
-| Команда                    | Сокращение | Доступ     | Описание                                                                                                                                                                                      |
-| -------------------------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CLAIMITEM [Bots]`         | `CI`       | `Operator` | Получить предмет распродажи, например, наклейки или что-то еще                                                                                                                                |
-| `CLAIM20TH [Bots]`         | `C20`      | `Operator` | Получить бесплатные предметы 20-ой годовщины Steam в магазине очков                                                                                                                           |
-| `SIM4 [Bots]`              |            | `Operator` | Получить стикеры `The Sims™ 4` [ссылка](https://store.steampowered.com/sale/simscelebrationsale)                                                                                              |
-| `DL2 [Bots]`               |            | `Operator` | Получить вещи `Dying Light 2 Stay Human` [ссылка](https://store.steampowered.com/sale/dyinglight)                                                                                             |
-| `DL22 [Bots] [Sticker Id]` |            | `Operator` | Получить предметы `Dying Light 2 Stay Human` , `Sticker Id` не обязательно, значение может быть от 1 до 4 [ссылка](https://store.steampowered.com/developer/Techland/sale/techlandsummer2023) |
-| `RLE [Bots] [Sticker Id]`  |            | `Operator` | Получить предметы `Redfall Launch Event` , `Sticker Id` не обязательно, значение может быть от 1 до 4 [ссылка](https://store.steampowered.com/sale/redfall_launch)                            |
+| Команда            | Сокращение | Доступ     | Описание                                                                                                    |
+| ------------------ | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| `CLAIMITEM [Bots]` | `CI`       | `Operator` | Получить предмет распродажи, например, наклейки или что-то еще                                              |
+| `CLAIM20TH [Bots]` | `C20`      | `Operator` | Получить бесплатные предметы 20-ой годовщины Steam в магазине очков                                         |
+| `DL2 [Bots]`       |            | `Operator` | Получить вещи `Dying Light 2 Stay Human` [ссылка](https://store.steampowered.com/sale/dyinglight2towerraid) |
 
 > `ASFEnhance` will automatic execute `CLAIMITEM` command for every bot defiend in `AutoClaimItemBotNames` after 1 hour since ASF started and every 23 hours.
 
@@ -66,6 +63,22 @@
 
 ### Обновления плагинов и подмодулей
 
+> ArchiSteamFarm 6.0.0.0 added plugin update interface, now you can update plugins with ASF
+
+Command: `UPDATEPLUGINS stable ASFEnhance`
+
+---
+
+> Also, you can update plugins automaticly when using `Update` command, to enable this future, requires set `PluginsUpdateMode` to `blacklist` in `ASF.json`
+
+![blacklist](img/blacklist.png)
+
+> or set `PluginsUpdateMode` to `whitelist`, and add `ASFEnhance` into `PluginsUpdateList`
+
+![whitelist](img/whitelist.png)
+
+---
+
 | Команда                       | Сокращение | Доступ     | Описание                                                                                                                                               |
 | ----------------------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `PLUGINSLIST`                 | `PL`       | `Operator` | Получить список установленных в данный момент плагинов, те из них, которые имеют в конце [], являются подмодулями, которыми может управлять ASFEnhance |
@@ -83,7 +96,7 @@
 
 [afdian_qr]: https://raw.chrxw.com/chr233/master/afadian_qr.png
 [afdian_img]: https://img.shields.io/badge/爱发电-@chr__-ea4aaa.svg?logo=github-sponsors
-[afdian_link]: https://afdian.net/@chr233
+[afdian_link]: https://afdian.com/@chr233
 [bmac_qr]: https://raw.chrxw.com/chr233/master/bmc_qr.png
 [bmac_img]: https://img.shields.io/badge/buy%20me%20a%20coffee-@chr233-yellow?logo=buymeacoffee
 [bmac_link]: https://www.buymeacoffee.com/chr233
@@ -92,19 +105,26 @@
 
 ### ChangeLog
 
-| Версия ASFEnhance                                                      | Совместимая версия ASF | Описание                                                                 |
-| ---------------------------------------------------------------------- | :--------------------: | ------------------------------------------------------------------------ |
-| [2.1.4.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.4.0)   |        6.0.2.6         | ASF -> 6.0.2.6, 修复 `ADDWISHLIST` 命令                                  |
-| [2.1.3.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.3.3)   |        6.0.1.24        | ASF -> 6.0.1.24, 修复 `ADDWISHLIST` 命令, 新增 `GETPRIVACYAPP` 等命令    |
-| [2.1.2.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.2.3)   |        6.0.0.3         | 修复 `PURCHASE` 命令, 新增 `RECOMMENT` 命令                              |
-| [2.1.1.1](https://github.com/chr233/ASFEnhance/releases/tag/2.1.1.1)   |        6.0.0.3         | ASF -> 6.0.0.3                                                           |
-| [2.0.16.2](https://github.com/chr233/ASFEnhance/releases/tag/2.0.16.2) |        5.5.3.4         | 新增 `EDITCART` `ADDCARTGIFT` 命令, 改进 `APPDETAIL` 命令, 改进 IPC 接口 |
+| Версия ASFEnhance                                                      | Совместимая версия ASF | Описание                                                 |
+| ---------------------------------------------------------------------- | :--------------------: | -------------------------------------------------------- |
+| [2.1.12.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.12.0) |        6.0.4.4         | 改进翻译, 新增 `IGNOREGAME` 命令                         |
+| [2.1.11.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.11.0) |        6.0.4.4         | 改进翻译, 新增 `REGISTEDATE` 命令                        |
+| [2.1.10.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.10.3) |        6.0.4.4         | ASF -> 6.0.4.4, 改进翻译, 新增 `CRAFTSPECIFYBADGES` 命令 |
+| [2.1.9.2](https://github.com/chr233/ASFEnhance/releases/tag/2.1.9.2)   |        6.0.3.4         | 新增 `DL2` 命令, 移除失效命令                            |
+| [2.1.8.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.8.3)   |        6.0.3.4         | 新增 `STACKINVENTORY`, `UNSTACKINVENTORY` 命令           |
+| [2.1.7.1](https://github.com/chr233/ASFEnhance/releases/tag/2.1.7.1)   |        6.0.3.4         | 新增 `CHECKMARKLIMIT` 命令                               |
+| [2.1.6.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.6.0)   |        6.0.3.4         | ASF -> 6.0.3.4                                           |
 
 <details>
   <summary>История версий</summary>
 
 | Версия ASFEnhance                                                      | Совместимая версия ASF | Описание                                                                     |
 | ---------------------------------------------------------------------- | :--------------------: | ---------------------------------------------------------------------------- |
+| [2.1.5.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.5.0)   |        6.0.2.6         | 修复 `GETACCCOUNTBAN` 命令, 新增 `DELETECART` 命令                           |
+| [2.1.4.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.4.0)   |        6.0.2.6         | ASF -> 6.0.2.6, 修复 `ADDWISHLIST` 命令                                      |
+| [2.1.3.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.3.3)   |        6.0.1.24        | ASF -> 6.0.1.24, 修复 `ADDWISHLIST` 命令, 新增 `GETPRIVACYAPP` 等命令        |
+| [2.1.2.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.2.3)   |        6.0.0.3         | 修复 `PURCHASE` 命令, 新增 `RECOMMENT` 命令                                  |
+| [2.1.1.1](https://github.com/chr233/ASFEnhance/releases/tag/2.1.1.1)   |        6.0.0.3         | ASF -> 6.0.0.3                                                               |
 | [2.0.16.2](https://github.com/chr233/ASFEnhance/releases/tag/2.0.16.2) |        5.5.3.4         | 新增 `EDITCART` `ADDCARTGIFT` 命令, 改进 `APPDETAIL` 命令, 改进 IPC 接口     |
 | [2.0.15.0](https://github.com/chr233/ASFEnhance/releases/tag/2.0.15.0) |        5.5.3.4         | 适配新的购物车接口, 移除 `PURCHASEGIFT` 命令                                 |
 | [2.0.14.2](https://github.com/chr233/ASFEnhance/releases/tag/2.0.14.2) |        5.5.3.4         | ASF -> 5.5.3.4                                                               |
@@ -303,6 +323,8 @@ ASF.json
 | `GETPRIVACYAPP [Bots]`                    | `GPA`      | `Operator` | 获取私密 APP 列表                                                                                        |
 | `SETAPPPRIVATE [Bots] <AppIds>`           | `SAPRI`    | `Master`   | 将指定 APP 设置为私密                                                                                    |
 | `SETAPPPUBLIC [Bots] <AppIds>`            | `SAPUB`    | `Master`   | 将指定 APP 设置为公开                                                                                    |
+| `CHECKMARKETLIMIT [Bots]`                 | `CML`      | `Operator` | 检查机器人的市场交易权限是否被限制                                                                       |
+| `REGISTEDATE [Bots]`                      |            | `Operator` | 获取机器人注册时间                                                                                       |
 
 - значения аргументов команды `SETEMAILOPTION`
 
@@ -382,6 +404,7 @@ ASF.json
 | `SETAVATAR [Bots] ImageUrl` 🐞         | `GA`       | `Opetator`      | Установить аватар бота в соответствии c cсылкойна указанное изображение в Интернете                                                                                                                                                 |
 | `DELETEAVATAR [Bots]` 🐞               |            | `Master`        | Удалить аватар бота (сбросить на стандартный)                                                                                                                                                                                       |
 | `CRAFTBADGE [Bots]`                    | `CB`       | `Master`        | Автоматическое изготовление крафтовых значков (изготовление всех крафтовых значков за один раз)                                                                                                                                     |
+| `CRAFTSPECIFYBADGES [Bots] <AppIds>`   | `CSB`      | `Master`        | 自动合成指定游戏的徽章 (各合成一级)                                                                                                                                                                                                 |
 | `EDITCUSTOMURL [Bot] CustomUrl`        | `ECU`      | `Master`        | Edit bot's custom profile url                                                                                                                                                                                                       |
 | `DELETECUSTOMURL [Bots]`               | `DCU`      | `Master`        | Delete bot's custom profile url                                                                                                                                                                                                     |
 
@@ -422,13 +445,15 @@ ASF.json
 
 ### Команды Списка Желаний
 
-| Команда                          | Сокращение | Доступ   | Описание                                                       |
-| -------------------------------- | ---------- | -------- | -------------------------------------------------------------- |
-| `ADDWISHLIST [Bots] <AppIDs>`    | `AW`       | `Master` | Добавить боту игру в список желаемого                          |
-| `REMOVEWISHLIST [Bots] <AppIDs>` | `RW`       | `Master` | Убрать у бота игру из списка желаемого                         |
-| `FOLLOWGAME [Bots] <AppIDs>`     | `FG`       | `Master` | Подписаться на определённую игру                               |
-| `UNFOLLOWGAME [Bots] <AppIDs>`   | `UFG`      | `Master` | Отписаться от определённой игры                                |
-| `CHECK [Bots] <AppIDs>`          | `CK`       | `Master` | Проверить наличие игры в библиотеке/списке желаемого/подписках |
+| Команда                            | Сокращение | Доступ   | Описание                                                       |
+| ---------------------------------- | ---------- | -------- | -------------------------------------------------------------- |
+| `ADDWISHLIST [Bots] <AppIDs>`      | `AW`       | `Master` | Добавить боту игру в список желаемого                          |
+| `REMOVEWISHLIST [Bots] <AppIDs>`   | `RW`       | `Master` | Убрать у бота игру из списка желаемого                         |
+| `FOLLOWGAME [Bots] <AppIDs>`       | `FG`       | `Master` | Подписаться на определённую игру                               |
+| `UNFOLLOWGAME [Bots] <AppIDs>`     | `UFG`      | `Master` | Отписаться от определённой игры                                |
+| `CHECK [Bots] <AppIDs>`            | `CK`       | `Master` | Проверить наличие игры в библиотеке/списке желаемого/подписках |
+| `IGNOREGAME [Bots] <AppIDs>`       | `IG`       | `Master` | Ignore game                                                    |
+| `REMOVEIGNOREGAME [Bots] <AppIDs>` | `RIG`      | `Master` | Cancel ignore game                                             |
 
 ### Команды Магазина
 
@@ -462,6 +487,7 @@ ASF.json
 | `EDITCART [Bots] <lineItemIds>`                  | `EC`       | `Operator` | 编辑购物车项目, 设置为为自己购买                                                              |
 | `EDITCARTPRIVATE [Bots] <lineItemIds>`           | `ECP`      | `Operator` | 编辑购物车项目, 设置为私密购买                                                                |
 | `EDITCARTGIFT [Bots] <lineItemIds> SteamId`      | `ECG`      | `Operator` | 编辑购物车项目, 设置为礼物赠送, SteamId 支持 botName 或者 SteamID32 或者 SteamId64            |
+| `DELETECART [Bots] <lineItemIds>`                | `DC`       | `Operator` | 删除购物车项目                                                                                |
 | `CARTRESET [Bots]`                               | `CR`       | `Operator` | Очистить корзину                                                                              |
 | `CARTCOUNTRY [Bots]`                             | `CC`       | `Operator` | Информация о доступной валюте (Зависит от IP адреса и страны кошелька)                        |
 | `FAKEPURCHASE [Bots]`                            | `FPC`      | `Master`   | Имитация корзины бота-покупателя и создание записи о неудаче без реального оформления покупки |
@@ -495,11 +521,16 @@ ASF.json
 
 ### Команды Списка Рекомендаций
 
-| Команда           | Сокращение | Доступ   | Описание                                                            |
-| ----------------- | ---------- | -------- | ------------------------------------------------------------------- |
-| `EXPLORER [Bots]` | `EX`       | `Master` | Вызвать задачу ASF "Просмотреть список рекомендаций" через 5 секунд |
+| Команда                           | Сокращение | Доступ   | Описание                                                            |
+| --------------------------------- | ---------- | -------- | ------------------------------------------------------------------- |
+| `EXPLORER [Bots]`                 | `EX`       | `Master` | Вызвать задачу ASF "Просмотреть список рекомендаций" через 5 секунд |
+| `ENABLEAUTOSTEAMSALEEVENT [Bots]` | `EASSE`    | `Master` | 为指定机器人开启 `AutoSteamSaleEvent` 设置                          |
 
-> Пожалуйста, по возможности, позвольте ASF просматривать список рекомендаций самому, эта команда используется для просмотра списка рекомендаций как можно скорее
+> `AutoSteamSaleEvent` is ArchiSteamFarm's feature, [参见](https://github.com/JustArchiNET/ArchiSteamFarm/wiki/Configuration#farmingpreferences)
+>
+> Please try to let ASF explore the queue by itself. This command is only used as a supplementary method to forcefully trigger the `AutoSteamSaleEvent` feature.
+>
+> What `ENABLEAUTOSTEAMSALEEVENT` do actully is setting the`FarmingPreferences` property in bot's config to specify value, and let the `AutoSteamSaleEvent` feature enabled, you can also do this manually.
 
 ### Команды кошелька
 
@@ -507,6 +538,15 @@ ASF.json
 | -------------------------------- | ---------- | -------- | ---------------------------------------------------------------------------------------------------------- |
 | `REDEEMWALLET [Bots] <keys>`     | `RWA`      | `Master` | Код кошелька, если требуется адрес для выставления счета, будет использоваться адрес, указанный в ASF.json |
 | `REDEEMWALLETMULT [Bots] <keys>` | `RWAM`     | `Master` | Использование кода кошелька, но каждый бот будет использовать только один данный код                       |
+
+## Inventory Commands
+
+> 物品堆叠和取消堆叠会发送大量请求, 请不要对大量机器人同时使用这些命令, 有可能会因为网络请求过多导致临时封禁
+
+| Command                                   | Shorthand | Access     | Description                                                                         |
+| ----------------------------------------- | --------- | ---------- | ----------------------------------------------------------------------------------- |
+| `STACKINVENTORY [Bots] AppId ContextId`   | `STI`     | `Operator` | 将指定 AppId 的物品库存中同类物品堆叠在一起, 对于大部分 App 来说, `ContextId` = 2   |
+| `UNSTACKINVENTORY [Bots] AppId ContextId` | `USTI`    | `Operator` | 将指定 AppId 的物品库存中堆叠后的物品解除堆叠, 对于大部分 App 来说, `ContextId` = 2 |
 
 ### Сокращения Команд ASF
 
