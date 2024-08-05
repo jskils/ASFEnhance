@@ -1,4 +1,5 @@
 using ArchiSteamFarm.Core;
+using ArchiSteamFarm.Helpers.Json;
 using ArchiSteamFarm.Plugins.Interfaces;
 using ArchiSteamFarm.Steam;
 using ASFEnhance.Data.Plugin;
@@ -68,7 +69,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 {
                     try
                     {
-                        config = JsonSerializer.Deserialize<PluginConfig>(configValue);
+                        config = configValue.ToJsonObject<PluginConfig>();
                         if (config != null)
                         {
                             break;
@@ -243,11 +244,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "LICENSE" or
                 "L" when access >= EAccess.Operator =>
                     Account.Command.ResponseGetAccountLicenses(bot, false),
-
-                "REMOVEDEMOS" or
-                "REMOVEDEMO" or
-                "RD" when access >= EAccess.Master =>
-                    Account.Command.ResponseRemoveAllDemos(bot),
 
                 "EMAILOPTIONS" or
                 "EMAILOPTION" or
@@ -482,21 +478,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "LICENSE" or
                 "L" when access >= EAccess.Operator =>
                     Account.Command.ResponseGetAccountLicenses(Utilities.GetArgsAsText(args, 1, ","), false),
-
-                "REMOVEDEMOS" or
-                "REMOVEDEMO" or
-                "RD" when access >= EAccess.Master =>
-                    Account.Command.ResponseRemoveAllDemos(Utilities.GetArgsAsText(args, 1, ",")),
-
-                "REMOVELICENSES" or
-                "REMOVELICENSE" or
-                "RL" when argLength > 2 && access >= EAccess.Master =>
-                    Account.Command.ResponseRemoveFreeLicenses(args[1], Utilities.GetArgsAsText(args, 2, ",")),
-
-                "REMOVELICENSES" or
-                "REMOVELICENSE" or
-                "RL" when access >= EAccess.Master =>
-                    Account.Command.ResponseRemoveFreeLicenses(bot, args[1]),
 
                 "EMAILOPTIONS" or
                 "EMAILOPTION" or
@@ -1133,7 +1114,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
         }
         catch (Exception ex) //错误日志
         {
-            var cfg = JsonSerializer.Serialize(Config, DebugJsonOptions);
+            var cfg = Config.ToJsonText();
 
             var sb = new StringBuilder();
             sb.AppendLine(Langs.ErrorLogTitle);

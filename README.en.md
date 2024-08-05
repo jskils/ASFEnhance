@@ -109,6 +109,7 @@ Command: `UPDATEPLUGINS stable ASFEnhance`
 
 | ASFEnhance Version                                                     | Depended ASF Version | Description                                              |
 | ---------------------------------------------------------------------- | :------------------: | -------------------------------------------------------- |
+| [2.2.0.0](https://github.com/chr233/ASFEnhance/releases/tag/2.2.0.0)   |       6.0.5.2        | ASF -> 6.0.5.2, 改进翻译                                 |
 | [2.1.12.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.12.0) |       6.0.4.4        | 改进翻译, 新增 `IGNOREGAME` 命令                         |
 | [2.1.11.0](https://github.com/chr233/ASFEnhance/releases/tag/2.1.11.0) |       6.0.4.4        | 改进翻译, 新增 `REGISTEDATE` 命令                        |
 | [2.1.10.3](https://github.com/chr233/ASFEnhance/releases/tag/2.1.10.3) |       6.0.4.4        | ASF -> 6.0.4.4, 改进翻译, 新增 `CRAFTSPECIFYBADGES` 命令 |
@@ -433,9 +434,9 @@ All avatars are from [Game Avatars Page](https://steamcommunity.com/actions/Game
 | `%d%`       | Random digit                    | `5`                        |
 | `%dn%`      | n Random digits                 | `%d6%` -> `114514`         |
 | `%l%`       | Random lowercase letter         | `x`                        |
-| `%ln%`      | n Random lowercase letters      | `%d7%` -> `asfeadf`        |
+| `%ln%`      | n Random lowercase letters      | `%l7%` -> `asfeadf`        |
 | `%u%`       | Random uppercase letter         | `C`                        |
-| `%un%`      | n Random uppercase letters      | `%d8%` -> `ASXCGDFA`       |
+| `%un%`      | n Random uppercase letters      | `%u8%` -> `ASXCGDFA`       |
 | `%bot%`     | bots nickname                   | `ASFE`                     |
 | `%bot3%`    | bots nickname, repeated 3 times | `%bot3%` -> `ASFEASFEASFE` |
 
