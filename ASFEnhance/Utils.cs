@@ -7,6 +7,7 @@ using ArchiSteamFarm.Web.Responses;
 using ASFEnhance.Data.Plugin;
 using ProtoBuf;
 using SteamKit2;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
@@ -20,6 +21,8 @@ internal static class Utils
     /// 插件配置
     /// </summary>
     internal static PluginConfig Config { get; set; } = new();
+
+    internal static ConcurrentDictionary<Bot, string?> CustomUserCountry { get; } = [];
 
     /// <summary>
     /// 格式化返回文本
@@ -65,12 +68,6 @@ internal static class Utils
         return bot.FormatBotResponse(string.Format(message, args));
     }
 
-    [Obsolete("请使用 AppendLine")]
-    internal static StringBuilder AppendLineFormat(this StringBuilder sb, string format)
-    {
-        return sb.AppendLine(format);
-    }
-
     internal static StringBuilder AppendLineFormat(this StringBuilder sb, string format, params object?[] args)
     {
         return sb.AppendLine(string.Format(format, args));
@@ -91,16 +88,25 @@ internal static class Utils
     /// </summary>
     /// <param name="steamId"></param>
     /// <returns></returns>
-    internal static ulong SteamId2Steam32(ulong steamId) => steamId - 0x110000100000000;
+    internal static ulong SteamId2Steam32(ulong steamId)
+    {
+        return IsSteam32ID(steamId) ? steamId : steamId - 0x110000100000000;
+    }
 
     /// <summary>
     /// 转换SteamId
     /// </summary>
     /// <param name="steamId"></param>
     /// <returns></returns>
-    internal static ulong Steam322SteamId(ulong steamId) => steamId + 0x110000100000000;
+    internal static ulong Steam322SteamId(ulong steamId)
+    {
+        return IsSteam32ID(steamId) ? steamId + 0x110000100000000 : steamId;
+    }
 
-    internal static bool IsSteam32ID(ulong id) => id <= 0xFFFFFFFF;
+    internal static bool IsSteam32ID(ulong id)
+    {
+        return id <= 0xFFFFFFFF;
+    }
 
     /// <summary>
     /// 匹配Steam商店Id
@@ -338,9 +344,12 @@ internal static class Utils
         byte maxTries = WebBrowser.MaxTries,
         int rateLimitingDelay = 0,
         bool allowSessionRefresh = true,
-        CancellationToken cancellationToken = default) => handler.UrlPostToJsonObjectWithSession<T>(request, null, data, referer, requestOptions, ESession.None, checkSessionPreemptively, maxTries, rateLimitingDelay, allowSessionRefresh, cancellationToken);
-
-    public static Task<bool> UrlPost(this ArchiWebHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        return handler.UrlPostToJsonObjectWithSession<T>(request, null, data, referer, requestOptions, ESession.None, checkSessionPreemptively, maxTries, rateLimitingDelay, allowSessionRefresh, cancellationToken);
+    }
+    
+    internal static Task<HtmlDocumentResponse?> UrlPostToHtmlDocument(this ArchiWebHandler handler,
         Uri request,
         IDictionary<string, string>? data = null,
         Uri? referer = null,
@@ -349,7 +358,24 @@ internal static class Utils
         byte maxTries = WebBrowser.MaxTries,
         int rateLimitingDelay = 0,
         bool allowSessionRefresh = true,
-        CancellationToken cancellationToken = default) => handler.UrlPostWithSession(request, null, data, referer, requestOptions, ESession.None, checkSessionPreemptively, maxTries, rateLimitingDelay, allowSessionRefresh, cancellationToken);
+        CancellationToken cancellationToken = default)
+    {
+        return handler.UrlPostToHtmlDocumentWithSession(request, null, data, referer, requestOptions, ESession.None, checkSessionPreemptively, maxTries, rateLimitingDelay, allowSessionRefresh, cancellationToken);
+    }
+
+    internal static Task<bool> UrlPost(this ArchiWebHandler handler,
+        Uri request,
+        IDictionary<string, string>? data = null,
+        Uri? referer = null,
+        WebBrowser.ERequestOptions requestOptions = WebBrowser.ERequestOptions.None,
+        bool checkSessionPreemptively = true,
+        byte maxTries = WebBrowser.MaxTries,
+        int rateLimitingDelay = 0,
+        bool allowSessionRefresh = true,
+        CancellationToken cancellationToken = default)
+    {
+        return handler.UrlPostWithSession(request, null, data, referer, requestOptions, ESession.None, checkSessionPreemptively, maxTries, rateLimitingDelay, allowSessionRefresh, cancellationToken);
+    }
 
     internal static string GetGifteeProfile(ulong accountId)
     {
@@ -386,56 +412,64 @@ internal static class Utils
     /// <summary>
     /// 货币代码转国家代码
     /// </summary>
-    /// <param name="currencyCode"></param>
+    /// <param name="bot"></param>
     /// <returns></returns>
-    internal static string WalletCurrency2UserCountry(ECurrencyCode currencyCode) => currencyCode switch
+    internal static string GetUserCountryCode(this Bot bot)
     {
-        ECurrencyCode.USD => "US",
-        ECurrencyCode.GBP => "GB",
-        ECurrencyCode.EUR => "EU",
-        ECurrencyCode.CHF => "CH",
-        ECurrencyCode.RUB => "RU",
-        ECurrencyCode.PLN => "PL",
-        ECurrencyCode.BRL => "BR",
-        ECurrencyCode.JPY => "JP",
-        ECurrencyCode.NOK => "NO",
-        ECurrencyCode.IDR => "ID",
-        ECurrencyCode.MYR => "MY",
-        ECurrencyCode.PHP => "PH",
-        ECurrencyCode.SGD => "SG",
-        ECurrencyCode.THB => "TH",
-        ECurrencyCode.VND => "VN",
-        ECurrencyCode.KRW => "KR",
-        ECurrencyCode.TRY => "TR",
-        ECurrencyCode.UAH => "UA",
-        ECurrencyCode.MXN => "MX",
-        ECurrencyCode.CAD => "CA",
-        ECurrencyCode.AUD => "CX",
-        ECurrencyCode.NZD => "CK",
-        ECurrencyCode.CNY => "CN",
-        ECurrencyCode.INR => "IN",
-        ECurrencyCode.CLP => "CL",
-        ECurrencyCode.PEN => "PE",
-        ECurrencyCode.COP => "CO",
-        ECurrencyCode.ZAR => "ZA",
-        ECurrencyCode.HKD => "HK",
-        ECurrencyCode.TWD => "TW",
-        ECurrencyCode.SAR => "SA",
-        ECurrencyCode.AED => "AE",
-        ECurrencyCode.ARS => "AR",
-        ECurrencyCode.ILS => "IL",
-        ECurrencyCode.BYN => "BY",
-        ECurrencyCode.KZT => "KZ",
-        ECurrencyCode.KWD => "KW",
-        ECurrencyCode.QAR => "QA",
-        ECurrencyCode.CRC => "CT",
-        ECurrencyCode.UYU => "UY",
-        ECurrencyCode.BGN => "BG",
-        ECurrencyCode.HRK => "HR",
-        ECurrencyCode.CZK => "CZ",
-        ECurrencyCode.DKK => "DK",
-        ECurrencyCode.HUF => "HU",
-        ECurrencyCode.RON => "RO",
-        _ => Langs.CountryCode,
-    };
+        if (CustomUserCountry.TryGetValue(bot, out var code) && !string.IsNullOrEmpty(code))
+        {
+            return code;
+        }
+
+        return bot.WalletCurrency switch
+        {
+            ECurrencyCode.USD => "US",
+            ECurrencyCode.GBP => "GB",
+            ECurrencyCode.EUR => "EU",
+            ECurrencyCode.CHF => "CH",
+            ECurrencyCode.RUB => "RU",
+            ECurrencyCode.PLN => "PL",
+            ECurrencyCode.BRL => "BR",
+            ECurrencyCode.JPY => "JP",
+            ECurrencyCode.NOK => "NO",
+            ECurrencyCode.IDR => "ID",
+            ECurrencyCode.MYR => "MY",
+            ECurrencyCode.PHP => "PH",
+            ECurrencyCode.SGD => "SG",
+            ECurrencyCode.THB => "TH",
+            ECurrencyCode.VND => "VN",
+            ECurrencyCode.KRW => "KR",
+            ECurrencyCode.TRY => "TR",
+            ECurrencyCode.UAH => "UA",
+            ECurrencyCode.MXN => "MX",
+            ECurrencyCode.CAD => "CA",
+            ECurrencyCode.AUD => "CX",
+            ECurrencyCode.NZD => "CK",
+            ECurrencyCode.CNY => "CN",
+            ECurrencyCode.INR => "IN",
+            ECurrencyCode.CLP => "CL",
+            ECurrencyCode.PEN => "PE",
+            ECurrencyCode.COP => "CO",
+            ECurrencyCode.ZAR => "ZA",
+            ECurrencyCode.HKD => "HK",
+            ECurrencyCode.TWD => "TW",
+            ECurrencyCode.SAR => "SA",
+            ECurrencyCode.AED => "AE",
+            ECurrencyCode.ARS => "AR",
+            ECurrencyCode.ILS => "IL",
+            ECurrencyCode.BYN => "BY",
+            ECurrencyCode.KZT => "KZ",
+            ECurrencyCode.KWD => "KW",
+            ECurrencyCode.QAR => "QA",
+            ECurrencyCode.CRC => "CT",
+            ECurrencyCode.UYU => "UY",
+            ECurrencyCode.BGN => "BG",
+            ECurrencyCode.HRK => "HR",
+            ECurrencyCode.CZK => "CZ",
+            ECurrencyCode.DKK => "DK",
+            ECurrencyCode.HUF => "HU",
+            ECurrencyCode.RON => "RO",
+            _ => Langs.CountryCode,
+        };
+    }
 }

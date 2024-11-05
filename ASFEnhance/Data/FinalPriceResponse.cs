@@ -1,4 +1,4 @@
-using ASFEnhance.Data.Common;
+using ASFEnhance.Data.WebApi;
 using SteamKit2;
 using System.Text.Json.Serialization;
 
@@ -14,7 +14,10 @@ internal sealed record FinalPriceResponse : BaseResultResponse
 
     [JsonPropertyName("discount")]
     public string? Discount { get; set; }
-
+    
     [JsonPropertyName("currencycode")]
     public ECurrencyCode CurrencyCode { get; set; }
+    
+    [JsonPropertyName("formattedTotal")]
+    public string? FormattedTotal { get; set; }
 }

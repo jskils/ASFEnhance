@@ -2,6 +2,7 @@ using ArchiSteamFarm.Core;
 using ArchiSteamFarm.Helpers.Json;
 using ArchiSteamFarm.Plugins.Interfaces;
 using ArchiSteamFarm.Steam;
+using ArchiSteamFarm.Web.GitHub.Data;
 using ASFEnhance.Data.Plugin;
 using System.ComponentModel;
 using System.Composition;
@@ -12,7 +13,7 @@ using System.Text.Json.Serialization;
 namespace ASFEnhance;
 
 [Export(typeof(IPlugin))]
-internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
+internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotModules, IGitHubPluginUpdates
 {
     public string Name => nameof(ASFEnhance);
 
@@ -182,7 +183,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                     Task.FromResult(PluginInfo),
 
                 //Update
-                "PLUGINSLIST" or
+                //"PLUGINSLIST" or
                 "PLUGINLIST" or
                 "PL" when access >= EAccess.Operator =>
                     Task.FromResult(Update.Command.ResponsePluginList()),
@@ -312,6 +313,10 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                     Cart.Command.ResponsePurchaseSelf(bot),
 
                 //Community
+                "NOTIFICATION" or
+                "N" when access >= EAccess.Operator =>
+                    Community.Command.ResponseGetNotifications(bot),
+
                 "CLEARNOTIFICATION" or
                 "CN" when access >= EAccess.Operator =>
                     Community.Command.ResponseClearNotification(bot),
@@ -400,6 +405,16 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "BALANCEINFO" or
                 "BI" when access >= EAccess.Operator =>
                     Profile.Command.ResponseBalanceInfo(bot),
+
+                //Inventory
+                "PENDINGGIFT" or
+                "PG" when access >= EAccess.Operator =>
+                    Inventory.Command.ResponseGetPendingGifts(bot),
+
+                "TRADEOFFERS" or
+                "TRADEOFFER" or
+                "TO" when access >= EAccess.Operator =>
+                    Inventory.Command.ResponseGetTradeOffers(bot),
 
                 //DevFuture
                 "COOKIES" when Config.DevFeature && access >= EAccess.Owner =>
@@ -560,6 +575,16 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "REGISTEDATE" when access >= EAccess.Operator =>
                     Account.Command.ResponseGetRegisteDate(Utilities.GetArgsAsText(args, 1, ",")),
 
+                "REMOVELICENSES" or
+                "REMOVELICENSE" or
+                "RL" when argLength > 2 && access >= EAccess.Master =>
+                    Account.Command.ResponseRemoveFreeLicenses(args[1], Utilities.GetArgsAsText(args, 2, ",")),
+
+                "REMOVELICENSES" or
+                "REMOVELICENSE" or
+                "RL" when access >= EAccess.Master =>
+                    Account.Command.ResponseRemoveFreeLicenses(bot, args[1]),
+
                 //Cart
                 "CART" or
                 "C" when access >= EAccess.Operator =>
@@ -622,17 +647,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "CR" when access >= EAccess.Operator =>
                     Cart.Command.ResponseClearCartGames(Utilities.GetArgsAsText(args, 1, ",")),
 
-                //"DIGITALGIFTCARDOPTION" or
-                //"DGCO" when access >= EAccess.Operator =>
-                //    Cart.Command.ResponseGetDigitalGiftCcardOptions(Utilities.GetArgsAsText(args, 1, ",")),
-
-                //"SENDDIGITALGIFTCARD" or
-                //"SDGC" when argLength >= 4 && access >= EAccess.Operator =>
-                //    Cart.Command.ResponseSendDigitalGiftCardBot(args[1], SkipBotNames(args, 2, 1), args.Last()),
-                //"SENDDIGITALGIFTCARD" or
-                //"SDGC" when argLength >= 3 && access >= EAccess.Operator =>
-                //    Cart.Command.ResponseSendDigitalGiftCardBot(bot, args[1], args[2]),
-
                 "FAKEPURCHASE" or
                 "FPC" when access >= EAccess.Master =>
                     Cart.Command.ResponseFakePurchaseSelf(Utilities.GetArgsAsText(args, 1, ",")),
@@ -641,7 +655,16 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "PC" when access >= EAccess.Master =>
                     Cart.Command.ResponsePurchaseSelf(Utilities.GetArgsAsText(args, 1, ",")),
 
+                "ADDFUNDS" when argLength > 2 && access >= EAccess.Operator =>
+                    Cart.Command.ResponseAddFunds(SkipBotNames(args, 0, 1), args.Last()),
+                "ADDFUNDS" when argLength == 2 && access >= EAccess.Operator =>
+                    Cart.Command.ResponseAddFunds(bot, args[1]),
+
                 //Community
+                "NOTIFICATION" or
+                "N" when access >= EAccess.Operator =>
+                    Community.Command.ResponseGetNotifications(Utilities.GetArgsAsText(args, 1, ",")),
+
                 "CLEARNOTIFICATION" or
                 "CN" when access >= EAccess.Operator =>
                     Community.Command.ResponseClearNotification(Utilities.GetArgsAsText(args, 1, ",")),
@@ -997,6 +1020,44 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
                 "USTI" when argLength == 3 && access >= EAccess.Operator =>
                     Inventory.Command.ResponseUnStackInventory(bot, args[1], args[2]),
 
+                "PENDINGGIFT" or
+                "PG" when access >= EAccess.Operator =>
+                    Inventory.Command.ResponseGetPendingGifts(Utilities.GetArgsAsText(args, 1, ",")),
+
+                "ACCEPTGIFT" or
+                "AG" when argLength > 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseAcceptGift(args[1], Utilities.GetArgsAsText(args, 2, ",")),
+                "ACCEPTGIFT" or
+                "AG" when argLength == 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseAcceptGift(bot, args[1]),
+
+                "DECLINEGIFT" or
+                "DG" when argLength > 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseDeclinetGift(args[1], Utilities.GetArgsAsText(args, 2, ","), null),
+                "DECLINEGIFT" or
+                "DG" when argLength == 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseDeclinetGift(bot, args[1], null),
+
+                "TRADEOFFERS" or
+                "TRADEOFFER" or
+                "TO" when access >= EAccess.Operator =>
+                    Inventory.Command.ResponseGetTradeOffers(Utilities.GetArgsAsText(args, 1, ",")),
+
+                "ACCEPTOFFER" or
+                "AO" when argLength > 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseDoTradeOffers(args[1], Utilities.GetArgsAsText(args, 2, ","), true),
+                "ACCEPTOFFER" or
+                "AO" when argLength == 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseDoTradeOffers(bot, args[1], true),
+
+                "CANCELOFFER" or
+                "CO" when argLength > 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseDoTradeOffers(args[1], Utilities.GetArgsAsText(args, 2, ","), false),
+                "CANCELOFFER" or
+                "CO" when argLength == 2 && access >= EAccess.Master =>
+                    Inventory.Command.ResponseDoTradeOffers(bot, args[1], false),
+
+
                 //DevFuture
                 "COOKIES" when Config.DevFeature && access >= EAccess.Owner =>
                     DevFeature.Command.ResponseGetCookies(Utilities.GetArgsAsText(args, 1, ",")),
@@ -1049,6 +1110,8 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
             throw new InvalidEnumArgumentException(nameof(access), (int)access, typeof(EAccess));
         }
 
+        string? moduleName = null;
+
         try
         {
             var cmd = args[0].ToUpperInvariant();
@@ -1071,22 +1134,23 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
 
                 if (pluginName == "ASFE" || pluginName == "ASFENHANCE") //调用插件命令
                 {
+                    moduleName = Name;
                     task = ResponseCommand(bot, access, cmd, message, args, steamId);
                 }
                 else if (_Adapter_.ExtensionCore.HasSubModule) //调用外部模块命令
                 {
-                    task = _Adapter_.ExtensionCore.ExecuteCommand(pluginName, cmd, bot, access, message, args, steamId);
+                    (moduleName, task) = _Adapter_.ExtensionCore.ExecuteCommand(pluginName, cmd, bot, access, message, args, steamId);
                 }
             }
             else //未指定插件名称
             {
-
+                moduleName = Name;
                 task = ResponseCommand(bot, access, cmd, message, args, steamId);
 
                 if (task == null && _Adapter_.ExtensionCore.HasSubModule)
                 {
                     //如果本插件未调用则调用外部插件命令
-                    task = _Adapter_.ExtensionCore.ExecuteCommand(cmd, bot, access, message, args, steamId);
+                    (moduleName, task) = _Adapter_.ExtensionCore.ExecuteCommand(cmd, bot, access, message, args, steamId);
                 }
             }
 
@@ -1106,8 +1170,8 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
         catch (MissingMethodException ex)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Missing Method Exception Detected, Use ASF-generic version may help");
-            sb.AppendLine("检测到 Missing Method Exception 错误, 换成 ASF-generic 版本可能可以修正");
+            sb.AppendLine("Detected [Missing Method Exception] error , Use ASF-generic version may help");
+            sb.AppendLine("检测到 [Missing Method Exception] 错误, 换成 ASF-generic 版本可能可以修正");
             sb.AppendLine(Static.Line);
             sb.AppendLine(ex.StackTrace);
             return FormatStaticResponse(sb.ToString());
@@ -1116,8 +1180,13 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest
         {
             var cfg = Config.ToJsonText();
 
+            if (!string.IsNullOrEmpty(Config.ApiKey))
+            {
+                cfg = cfg.Replace(Config.ApiKey, "**hidden**");
+            }
+
             var sb = new StringBuilder();
-            sb.AppendLine(Langs.ErrorLogTitle);
+            sb.AppendLineFormat(Langs.ErrorLogTitle, moduleName);
             sb.AppendLine(Static.Line);
             sb.AppendLineFormat(Langs.ErrorLogOriginMessage, message);
             sb.AppendLineFormat(Langs.ErrorLogAccess, access);

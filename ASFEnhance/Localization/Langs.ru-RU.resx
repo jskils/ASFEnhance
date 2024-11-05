@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -490,7 +490,7 @@
     <value> - Онлайн обновление обменного курса с Exchangerate-API.com</value>
   </data>
   <data name="PluginInfo" xml:space="preserve">
-    <value>Donate: https://afdian.com/@chr233</value>
+    <value>Пожертвование: https://afdian.com/@chr233</value>
   </data>
   <data name="PurchaseHistoryTypeWallet" xml:space="preserve">
     <value>   - Кошелек: {0:0.00} {1}</value>
@@ -637,7 +637,7 @@
     <value>{0} | {1}</value>
   </data>
   <data name="ErrorLogTitle" xml:space="preserve">
-    <value>ASFenhance обнаружил ошибку, журнал ошибок ниже</value>
+    <value>{0} 遇到错误, 日志如下</value>
   </data>
   <data name="ErrorLogOriginMessage" xml:space="preserve">
     <value> - Origin Message: {0}</value>
@@ -1337,5 +1337,137 @@
   </data>
   <data name="RwConfigContentError" xml:space="preserve">
     <value>Ошибка чтения или записи конфигурации</value>
+  </data>
+  <data name="MsgReceivedGift" xml:space="preserve">
+    <value>收到礼物</value>
+  </data>
+  <data name="MsgReceivedReplyed" xml:space="preserve">
+    <value>收到回复</value>
+  </data>
+  <data name="MsgSteamTurn" xml:space="preserve">
+    <value>SteamTurn消息</value>
+  </data>
+  <data name="MsgSteamSupport" xml:space="preserve">
+    <value>Steam客服消息</value>
+  </data>
+  <data name="MsgTradeOffer" xml:space="preserve">
+    <value>收到报价</value>
+  </data>
+  <data name="MsgMajorSale" xml:space="preserve">
+    <value>Крупная распродажа</value>
+  </data>
+  <data name="MsgFriendInviation" xml:space="preserve">
+    <value>Входящий запрос дружбы</value>
+  </data>
+  <data name="MsgReceivedNewItem" xml:space="preserve">
+    <value>Получен новый предмет</value>
+  </data>
+  <data name="MsgWishlistItemOnSale" xml:space="preserve">
+    <value>Скидка из списка желаемого</value>
+  </data>
+  <data name="MsgNoMessage" xml:space="preserve">
+    <value>无通知</value>
+  </data>
+  <data name="PrivateMessage" xml:space="preserve">
+    <value>私信消息</value>
+  </data>
+  <data name="MsgCommunityMessage" xml:space="preserve">
+    <value>Новости сообщества Steam</value>
+  </data>
+  <data name="NocUnreadCount" xml:space="preserve">
+    <value>未读通知: {0}</value>
+  </data>
+  <data name="NocConfirmationCount" xml:space="preserve">
+    <value>待确认通知: {0}</value>
+  </data>
+  <data name="NocPendingGiftCount" xml:space="preserve">
+    <value>待处理礼物: {0}</value>
+  </data>
+  <data name="Noc待处理好友请求" xml:space="preserve">
+    <value>待处理好友请求</value>
+  </data>
+  <data name="NocPendingFriendCount" xml:space="preserve">
+    <value>待处理好友请求: {0}</value>
+  </data>
+  <data name="NocPendingFamilyInviteCount" xml:space="preserve">
+    <value>待处理家庭邀请: {0}</value>
+  </data>
+  <data name="NoPendingGift" xml:space="preserve">
+    <value>无待处理礼物</value>
+  </data>
+  <data name="PendingGiftListDetail" xml:space="preserve">
+    <value>{0}: "{1}" via {2} ({3})</value>
+  </data>
+  <data name="SpecifyPendingGiftNotFound" xml:space="preserve">
+    <value>未找到待收取的礼物, 可以使用 * 指代所有待收取的礼物</value>
+  </data>
+  <data name="AcceptGiftFailed" xml:space="preserve">
+    <value>接收礼物失败</value>
+  </data>
+  <data name="AcceptGiftSuccess" xml:space="preserve">
+    <value>接收礼物成功</value>
+  </data>
+  <data name="DeclineGiftSuccess" xml:space="preserve">
+    <value>拒收礼物成功</value>
+  </data>
+  <data name="DeclineGiftFailed" xml:space="preserve">
+    <value>拒收礼物失败</value>
+  </data>
+  <data name="ReceivedTradeOffers" xml:space="preserve">
+    <value>收到的交易报价:</value>
+  </data>
+  <data name="SentTradeOffers" xml:space="preserve">
+    <value>发出的交易报价:</value>
+  </data>
+  <data name="TradeOfferListTitle" xml:space="preserve">
+    <value>报价ID     |  对方 SteamId    | 收到 | 发送 | 交易状态</value>
+  </data>
+  <data name="TradeOfferListItem" xml:space="preserve">
+    <value>{0} | {1} | {2}  | {3}  | {4}</value>
+  </data>
+  <data name="GetTradeOfferFailed" xml:space="preserve">
+    <value>获取交易报价失败</value>
+  </data>
+  <data name="NoPendingTradeOffer" xml:space="preserve">
+    <value>无待处理的报价</value>
+  </data>
+  <data name="SpecifyTradeOfferNotFound" xml:space="preserve">
+    <value>未找到待处理的报价, 可用 * 指代所有待处理的报价</value>
+  </data>
+  <data name="DoTradeOfferResult" xml:space="preserve">
+    <value>{0}: {1}{2}{3}</value>
+  </data>
+  <data name="AcceptTradeOffer" xml:space="preserve">
+    <value>接受报价</value>
+  </data>
+  <data name="Need2Fa" xml:space="preserve">
+    <value> 需要2FA验证</value>
+  </data>
+  <data name="DoTradeOfferResult2" xml:space="preserve">
+    <value>{0}: {1}{2}</value>
+  </data>
+  <data name="DeclineTradeOffer" xml:space="preserve">
+    <value>拒绝报价</value>
+  </data>
+  <data name="PurchaseFailedArgumentError" xml:space="preserve">
+    <value>参数错误, 请输入正确的金额</value>
+  </data>
+  <data name="PurchaseAddFundsError" xml:space="preserve">
+    <value>提交充值失败</value>
+  </data>
+  <data name="PurchaseAddFundsErrorGetCartError" xml:space="preserve">
+    <value>提交充值失败, 无法获取购物车信息</value>
+  </data>
+  <data name="PurchaseAddFundsErrorTransStatusError" xml:space="preserve">
+    <value>充值失败, 交易状态异常</value>
+  </data>
+  <data name="PurchaseAddFundsErrorParseExternalPaymentError" xml:space="preserve">
+    <value>充值失败, 解析外部支付信息失败</value>
+  </data>
+  <data name="PurchaseAddFundsErrorGetPaymentUrlError" xml:space="preserve">
+    <value>购买充值卡失败, 无法获取支付链接</value>
+  </data>
+  <data name="PurchaseAddFundsSuccess" xml:space="preserve">
+    <value>预计充值 {0}, 支付链接 {1}</value>
   </data>
 </root>

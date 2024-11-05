@@ -21,7 +21,7 @@ internal static partial class RegexUtils
     [GeneratedRegex("g_historyCursor = ([^;]+)")]
     public static partial Regex MatchHistortyCursor();
 
-    [GeneratedRegex(@"^([-+])?([^\d,.]*)([\d,.]+)\s*([^\d,.]*|[pуб.]*)$")]
+    [GeneratedRegex(@"^([-+])?([^\d,.]*)([\d,.]+)\s*([^\d,.]*|[руб6.]*)$")]
     public static partial Regex MatchHistoryItem();
 
     [GeneratedRegex(@"\( (\d+),")]
@@ -80,4 +80,13 @@ internal static partial class RegexUtils
 
     [GeneratedRegex(@"(?:\(|（)([^)）]+)(?:\)|）)")]
     public static partial Regex MatchWalletTooltips();
+
+    [GeneratedRegex(@"pending_gift_(\d+)")]
+    public static partial Regex MatchPendingGift();
+
+    [GeneratedRegex(@"ShowDeclineGiftOptions\( '\d+', '(\d+)' \);")]
+    public static partial Regex MatchPendingGiftAndSender();
+    
+    [GeneratedRegex(@"cart=(\d+)")]
+    public static partial Regex MatchCartIdFromUri();
 }
