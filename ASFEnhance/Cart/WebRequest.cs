@@ -14,7 +14,6 @@ namespace ASFEnhance.Cart;
 
 static class WebRequest
 {
-    
     static readonly Dictionary<string, string> UserAgentHeader = new(5)
     {
         { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" },
@@ -23,7 +22,7 @@ static class WebRequest
         { "Sec-Ch-Ua-Platform", "\"Windows\"" },
         { "Accept-Language", "zh-CN,zh;q=0.9" }
     };
-    
+
     /// <summary>
     ///     读取当前购物车
     /// </summary>
@@ -36,7 +35,7 @@ static class WebRequest
         var request = new Uri(SteamApiURL,
             $"/IAccountCartService/GetCart/v1/?access_token={token}&user_country={userCountry}");
         var response = await bot.ArchiWebHandler
-            .UrlGetToJsonObjectWithSession<AbstractResponse<GetCartResponse>>(request, referer: SteamStoreURL)
+            .UrlGetToJsonObjectWithSession<AbstractResponse<GetCartResponse>>(request, referer: SteamStoreURL, headers: UserAgentHeader)
             .ConfigureAwait(false);
         return response?.Content?.Response;
     }
@@ -53,13 +52,7 @@ static class WebRequest
     internal static async Task<AddItemsToCartResponse?> AddItemsToAccountsCart(Bot bot, List<SteamGameId> gameIds,
         bool isPrivate, GiftInfoData? giftInfo)
     {
-        var items = gameIds.Select(x => new AddItemsToCartRequest.ItemData
-        {
-            PackageId = x.Type == ESteamGameIdType.Sub ? x.Id : null,
-            BundleId = x.Type == ESteamGameIdType.Bundle ? x.Id : null,
-            GIftInfo = giftInfo,
-            Flags = new FlagsData { IsPrivate = isPrivate, IsGift = giftInfo != null }
-        });
+        var items = gameIds.Select(x => new AddItemsToCartRequest.ItemData { PackageId = x.Type == ESteamGameIdType.Sub ? x.Id : null, BundleId = x.Type == ESteamGameIdType.Bundle ? x.Id : null, GIftInfo = giftInfo, Flags = new FlagsData { IsPrivate = isPrivate, IsGift = giftInfo != null } });
 
         var payload = new AddItemsToCartRequest
         {
@@ -148,13 +141,7 @@ static class WebRequest
     internal static async Task<AddItemsToCartResponse?> ModifyLineItemsOfAccountCart(Bot bot, ulong lineItemId,
         bool isPrivate, GiftInfoData? giftInfo)
     {
-        var payload = new ModifyLineItemRequest
-        {
-            LineItemId = lineItemId,
-            UserCountry = bot.GetUserCountryCode(),
-            GiftInfo = giftInfo,
-            Flags = new FlagsData { IsPrivate = isPrivate, IsGift = giftInfo != null }
-        };
+        var payload = new ModifyLineItemRequest { LineItemId = lineItemId, UserCountry = bot.GetUserCountryCode(), GiftInfo = giftInfo, Flags = new FlagsData { IsPrivate = isPrivate, IsGift = giftInfo != null } };
 
         var json = payload.ToJsonText();
         var token = bot.AccessToken ?? throw new AccessTokenNullException();
@@ -229,7 +216,7 @@ static class WebRequest
         var request = new Uri(SteamCheckoutURL, "/checkout/?accountcart=1");
         var referer = new Uri(SteamStoreURL, "/cart/");
 
-        var response = await bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request, referer: referer)
+        var response = await bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request, referer: referer, headers: UserAgentHeader)
             .ConfigureAwait(false);
 
         if (response == null)
@@ -301,7 +288,7 @@ static class WebRequest
         };
 
         var response = await bot.ArchiWebHandler
-            .UrlPostToJsonObjectWithSession<InitTransactionResponse>(request, data: data, referer: referer)
+            .UrlPostToJsonObjectWithSession<InitTransactionResponse>(request, data: data, referer: referer, headers: UserAgentHeader)
             .ConfigureAwait(false);
         return response?.Content;
     }
@@ -354,15 +341,7 @@ static class WebRequest
         var request = new Uri(SteamCheckoutURL, "/checkout/finalizetransaction/");
         var referer = new Uri(SteamCheckoutURL, "/checkout/");
 
-        var data = new Dictionary<string, string>(3, StringComparer.Ordinal)
-        {
-            { "transid", transId },
-            { "CardCVV2", "" },
-            {
-                "browserInfo",
-                @"{""language"":""zh-CN"",""javaEnabled"":""false"",""colorDepth"":24,""screenHeight"":1080,""screenWidth"":1920}"
-            }
-        };
+        var data = new Dictionary<string, string>(3, StringComparer.Ordinal) { { "transid", transId }, { "CardCVV2", "" }, { "browserInfo", @"{""language"":""zh-CN"",""javaEnabled"":""false"",""colorDepth"":24,""screenHeight"":1080,""screenWidth"":1920}" } };
 
         var response = await bot.ArchiWebHandler
             .UrlPostToJsonObjectWithSession<FinalizeTransactionResponse>(request, data: data, referer: referer)
@@ -371,7 +350,7 @@ static class WebRequest
         request = new Uri(SteamCheckoutURL, $"/checkout/transactionstatus/?count=1&transid={transId}");
 
         var response2 = await bot.ArchiWebHandler
-            .UrlGetToJsonObjectWithSession<TransactionStatusResponse>(request, referer: referer).ConfigureAwait(false);
+            .UrlGetToJsonObjectWithSession<TransactionStatusResponse>(request, referer: referer, headers: UserAgentHeader).ConfigureAwait(false);
 
         if (response?.Content == null)
         {
@@ -412,15 +391,10 @@ static class WebRequest
         var request = new Uri(SteamStoreURL, "/digitalgiftcards/submitgiftcard");
         var referer = new Uri(SteamStoreURL, "/digitalgiftcards/selectgiftcard");
 
-        var data = new Dictionary<string, string>(4, StringComparer.Ordinal)
-        {
-            { "action", "add_to_cart" },
-            { "currency", bot.WalletCurrency.ToString() },
-            { "amount", amount.ToString() }
-        };
+        var data = new Dictionary<string, string>(4, StringComparer.Ordinal) { { "action", "add_to_cart" }, { "currency", bot.WalletCurrency.ToString() }, { "amount", amount.ToString() } };
 
         var response = await bot.ArchiWebHandler
-            .UrlPostToHtmlDocumentWithSession(request, data: data, referer: referer,
+            .UrlPostToHtmlDocumentWithSession(request, data: data, referer: referer, headers: UserAgentHeader,
                 session: ArchiWebHandler.ESession.PascalCase).ConfigureAwait(false);
 
         return response;
@@ -506,7 +480,7 @@ static class WebRequest
         };
 
         var response = await bot.ArchiWebHandler
-            .UrlPostToJsonObjectWithSession<PurchaseResponse>(request, data: data, referer: referer)
+            .UrlPostToJsonObjectWithSession<PurchaseResponse>(request, data: data, referer: referer, headers: UserAgentHeader)
             .ConfigureAwait(false);
         return response?.Content;
     }
@@ -522,16 +496,10 @@ static class WebRequest
         var request = new Uri(SteamStoreURL, "/steamaccount/addfundssubmit");
         var referer = new Uri(SteamStoreURL, "/steamaccount/addfunds");
 
-        var data = new Dictionary<string, string>(4, StringComparer.Ordinal)
-        {
-            { "action", "add_to_cart" },
-            { "currency", bot.WalletCurrency.ToString() },
-            { "amount", amount.ToString() },
-            { "mtreturnurl", "" }
-        };
+        var data = new Dictionary<string, string>(4, StringComparer.Ordinal) { { "action", "add_to_cart" }, { "currency", bot.WalletCurrency.ToString() }, { "amount", amount.ToString() }, { "mtreturnurl", "" } };
 
         var response = await bot.ArchiWebHandler
-            .UrlPostToHtmlDocumentWithSession(request, data: data, referer: referer,
+            .UrlPostToHtmlDocumentWithSession(request, data: data, referer: referer, headers: UserAgentHeader,
                 session: ArchiWebHandler.ESession.CamelCase).ConfigureAwait(false);
 
         return response;
@@ -600,7 +568,7 @@ static class WebRequest
         };
 
         var response = await bot.ArchiWebHandler
-            .UrlPostToJsonObjectWithSession<PurchaseResponse>(request, data: data, referer: referer)
+            .UrlPostToJsonObjectWithSession<PurchaseResponse>(request, data: data, referer: referer, headers: UserAgentHeader)
             .ConfigureAwait(false);
         return response?.Content;
     }
@@ -619,7 +587,7 @@ static class WebRequest
         var referer = new Uri(SteamCheckoutURL, $"/checkout?cart={gidShoppingCart}&microtxn=-1");
 
         var response = await bot.ArchiWebHandler
-            .UrlGetToJsonObjectWithSession<TransactionStatusResponse>(request, referer: referer).ConfigureAwait(false);
+            .UrlGetToJsonObjectWithSession<TransactionStatusResponse>(request, referer: referer, headers: UserAgentHeader).ConfigureAwait(false);
         return response?.Content;
     }
 
@@ -636,7 +604,7 @@ static class WebRequest
         var request = new Uri(SteamCheckoutURL, $"/checkout/externallink/?transid={transId}");
         var referer = new Uri(SteamCheckoutURL, $"/checkout?cart={gidShoppingCart}&microtxn=-1");
 
-        var response = await bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request, referer: referer)
+        var response = await bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request, referer: referer, headers: UserAgentHeader)
             .ConfigureAwait(false);
 
         var form = response?.Content?.QuerySelector("form#externalForm");
@@ -651,7 +619,8 @@ static class WebRequest
             return null;
         }
 
-        Dictionary<string, string> payload = [];
+        Dictionary<string, string> payload =  []
+        ;
         var inputs = form.QuerySelectorAll("input");
         foreach (var input in inputs)
         {

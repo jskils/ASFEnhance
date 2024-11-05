@@ -2,7 +2,6 @@ using ArchiSteamFarm.Core;
 using ArchiSteamFarm.Helpers.Json;
 using ArchiSteamFarm.Plugins.Interfaces;
 using ArchiSteamFarm.Steam;
-using ArchiSteamFarm.Web.GitHub.Data;
 using ASFEnhance.Data.Plugin;
 using System.ComponentModel;
 using System.Composition;
@@ -18,6 +17,9 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
     public string Name => nameof(ASFEnhance);
 
     public Version Version => MyVersion;
+
+    public bool CanUpdate => true;
+    public string RepositoryName => "chr233/ASFEnhance";
 
     [JsonInclude]
     public static PluginConfig Config => Utils.Config;
@@ -103,7 +105,6 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
             Config.Addresses.Add(Config.Address);
             Config.Address = null;
         }
-        
 
         //禁用命令
         if (Config.DisabledCmds != null)
@@ -350,7 +351,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
 
                 //Group
                 "GROUPLIST" or
-                "GL"  when access >= EAccess.FamilySharing =>
+                "GL" when access >= EAccess.FamilySharing =>
                     Group.Command.ResponseGroupList(bot),
 
                 //Other
@@ -669,28 +670,28 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
                 "CN" when access >= EAccess.Operator =>
                     Community.Command.ResponseClearNotification(Utilities.GetArgsAsText(args, 1, ",")),
 
-                //Curasor
+                //Curator
                 "CURATORLIST" or
-                "CL"  when access >= EAccess.Master =>
+                "CL" when access >= EAccess.Master =>
                     Curator.Command.ResponseGetFollowingCurators(Utilities.GetArgsAsText(args, 1, ",")),
 
                 "FOLLOWCURATOR" or
-                "FCU"  when argLength > 2 && access >= EAccess.Master =>
+                "FCU" when argLength > 2 && access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(args[1], Utilities.GetArgsAsText(args, 2, ","), true),
                 "FOLLOWCURATOR" or
-                "FCU"  when access >= EAccess.Master =>
+                "FCU" when access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(bot, args[1], true),
 
                 "UNFOLLOWALLCURASOR" or
                 "UNFOLLOWALLCURASORS" or
-                "UFACU"  when access >= EAccess.Master =>
+                "UFACU" when access >= EAccess.Master =>
                     Curator.Command.ResponseUnFollowAllCurators(Utilities.GetArgsAsText(args, 1, ",")),
 
                 "UNFOLLOWCURATOR" or
-                "UFCU"  when argLength > 2 && access >= EAccess.Master =>
+                "UFCU" when argLength > 2 && access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(args[1], Utilities.GetArgsAsText(args, 2, ","), false),
                 "UNFOLLOWCURATOR" or
-                "UFCU"  when access >= EAccess.Master =>
+                "UFCU" when access >= EAccess.Master =>
                     Curator.Command.ResponseFollowCurator(bot, args[1], false),
 
                 //Explorer
@@ -737,21 +738,21 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
 
                 //Group
                 "GROUPLIST" or
-                "GL"  when access >= EAccess.FamilySharing =>
+                "GL" when access >= EAccess.FamilySharing =>
                     Group.Command.ResponseGroupList(Utilities.GetArgsAsText(args, 1, ",")),
 
                 "JOINGROUP" or
-                "JG"  when argLength > 2 && access >= EAccess.Master =>
+                "JG" when argLength > 2 && access >= EAccess.Master =>
                     Group.Command.ResponseJoinGroup(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "JOINGROUP" or
-                "JG"  when access >= EAccess.Master =>
+                "JG" when access >= EAccess.Master =>
                     Group.Command.ResponseJoinGroup(bot, args[1]),
 
                 "LEAVEGROUP" or
-                "LG"  when argLength > 2 && access >= EAccess.Master =>
+                "LG" when argLength > 2 && access >= EAccess.Master =>
                     Group.Command.ResponseLeaveGroup(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "LEAVEGROUP" or
-                "LG"  when access >= EAccess.Master =>
+                "LG" when access >= EAccess.Master =>
                     Group.Command.ResponseLeaveGroup(bot, args[1]),
 
                 //Other
@@ -880,24 +881,24 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
                     Store.Command.ResponseGetAppsDetail(bot, args[1]),
 
                 "RECOMMENT" or
-                "REC"  when argLength > 2 && access >= EAccess.Master =>
+                "REC" when argLength > 2 && access >= EAccess.Master =>
                     Store.Command.ResponseGetReview(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "RECOMMENT" or
-                "REC"  when access >= EAccess.Master =>
+                "REC" when access >= EAccess.Master =>
                     Store.Command.ResponseGetReview(bot, args[1]),
 
                 "DELETERECOMMENT" or
-                "DREC"  when argLength > 2 && access >= EAccess.Master =>
+                "DREC" when argLength > 2 && access >= EAccess.Master =>
                     Store.Command.ResponseDeleteReview(args[1], Utilities.GetArgsAsText(args, 2, ",")),
                 "DELETERECOMMENT" or
-                "DREC"  when access >= EAccess.Master =>
+                "DREC" when access >= EAccess.Master =>
                     Store.Command.ResponseDeleteReview(bot, args[1]),
 
                 "PUBLISHRECOMMENT" or
-                "PREC"  when argLength > 3 && access >= EAccess.Master =>
+                "PREC" when argLength > 3 && access >= EAccess.Master =>
                     Store.Command.ResponsePublishReview(args[1], args[2], Utilities.GetArgsAsText(message, 3)),
                 "PUBLISHRECOMMENT" or
-                "PREC"  when argLength == 3 && access >= EAccess.Master =>
+                "PREC" when argLength == 3 && access >= EAccess.Master =>
                     Store.Command.ResponsePublishReview(bot, args[1], args[2]),
 
                 "REQUESTACCESS" or
@@ -1059,9 +1060,9 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
 
 
                 //DevFuture
-                "COOKIES" when Config.DevFeature && access >= EAccess.Owner =>
+                "COOKIES" when access >= EAccess.Owner =>
                     DevFeature.Command.ResponseGetCookies(Utilities.GetArgsAsText(args, 1, ",")),
-                "ACCESSTOKEN" when Config.DevFeature && access >= EAccess.Owner =>
+                "ACCESSTOKEN" when access >= EAccess.Owner =>
                     DevFeature.Command.ResponseGetAccessToken(Utilities.GetArgsAsText(args, 1, ",")),
 
                 //Limited Tips
@@ -1084,7 +1085,7 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
                     Task.FromResult(Other.Command.ResponseEulaCmdUnavilable()),
 
                 "COOKIES" or
-                "ACCESSTOKEN" when Config.DevFeature && access >= EAccess.Owner =>
+                "ACCESSTOKEN" when access >= EAccess.Owner =>
                     Task.FromResult(Other.Command.ResponseDevFeatureUnavilable()),
 
                 _ => null,
@@ -1231,5 +1232,26 @@ internal sealed class ASFEnhance : IASF, IBotCommand2, IBotFriendRequest, IBotMo
             }
         }
         return Task.FromResult(false);
+    }
+
+    /// <inheritdoc/>
+    public Task OnBotInitModules(Bot bot, IReadOnlyDictionary<string, JsonElement>? additionalConfigProperties)
+    {
+        if (additionalConfigProperties != null)
+        {
+            foreach (var (configProperty, configValue) in additionalConfigProperties)
+            {
+                if (configProperty == "UserCountry" && configValue.ValueKind == JsonValueKind.String)
+                {
+                    var countryCode = configValue.GetString();
+                    if (!string.IsNullOrEmpty(countryCode))
+                    {
+                        CustomUserCountry.TryAdd(bot, countryCode.ToUpperInvariant());
+                    }
+                    break;
+                }
+            }
+        }
+        return Task.CompletedTask;
     }
 }
